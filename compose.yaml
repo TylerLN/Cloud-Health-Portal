@@ -1,0 +1,12 @@
+services:
+  db:
+    image: docker.io/postgres:alpine
+    environment:
+      - POSTGRES_PASSWORD=2P~%nVrqeTS^o7A4FKFW3k5k54LDkDMzswX3FH~&
+      - POSTGRES_HOST_AUTH_METHOD=scram-sha-256
+    volumes:
+      - db-data:/var/lib/postgresql
+
+volumes:
+  db-data:
+
