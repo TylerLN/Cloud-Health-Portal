@@ -1,4 +1,5 @@
 import asyncio
+import re
 import ssl
 
 import asyncpg
@@ -13,6 +14,9 @@ class db_conn:
         username: str = "postgres",
         passfile: str = "./pgpass",
     ):
+        self.EMAIL_REGEX = re.compile(
+            r"^([^@\s\"(),:;<>@+[\]]+)(\+[^@\s\"(),:;<>@+[\]]+)?@([a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+\b)(?!\.)$"
+        )
         self.pool = await asyncpg.create_pool(
             host=host, port=port, username=username, ssl="require"
         )
@@ -48,4 +52,26 @@ class db_conn:
                 """
             )
 
-    async def 
+    async def create_account(user_email: str, user_password: str):
+        async with self.pool.acquire() as con:
+            await con.execute(
+                """
+                    INSERT INTO accounts(username,password)
+                    VALUES ($1,crypt($2, gen_salt('bf'));
+                """,
+                user_email,
+                user_password,
+            )
+
+    async def check_password(user_email: str, entered_password: str):
+        async with self.pool.acquire() as con:
+            await con.fetchrow(
+                """
+                    SELECT (pswhash = crypt($2, pswhash))
+                    AS pswmatch
+                    FROM accounts
+                    WHERE username = $1;
+                """,
+                user_email,
+                entered_password,
+            )
