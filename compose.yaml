@@ -1,11 +1,11 @@
 services:
   db:
     image: docker.io/postgres:alpine
-    environment:
-      - POSTGRES_PASSWORD=2P~%nVrqeTS^o7A4FKFW3k5k54LDkDMzswX3FH~&
-      - POSTGRES_HOST_AUTH_METHOD=scram-sha-256
+    shm_size: 128mb
+    command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
     volumes:
-      - db-data:/var/lib/postgresql
+      - ./data:/var/lib/postgresql:rw
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf:ro
 
 volumes:
   db-data:
