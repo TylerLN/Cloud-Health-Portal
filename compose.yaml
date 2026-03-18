@@ -3,10 +3,22 @@ services:
     image: docker.io/postgres:alpine
     shm_size: 128mb
     command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
+    security_opt:
+      - "label=type:backend_db_1_policy.process"
+    env_file:
+      - ./.env
     volumes:
-      - ./data:/var/lib/postgresql:rw
-      - ./postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - type: bind
+        source: ./data
+        target: /var/lib/postgresql
+        read_only: false
+      - type: bind
+        source: ./postgresql.conf
+        target: /etc/postgresql/postgresql.conf
+        read_only: true
+    ports:
+      - 5432:5432
 
-volumes:
-  db-data:
+# volumes:
+#  db-data:
 

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import asyncio
 import re
 import ssl
@@ -12,14 +13,36 @@ class db_conn:
         host: str | list[str] = None,
         port: int | list[port] = None,
         username: str = "postgres",
-        passfile: str = "./pgpass",
+        passfile: str = "./.pgpass",
+    ):
+        asyncio.run(
+            self.run(
+                host=host,
+                port=port,
+                username=username,
+                passfile=passfile,
+            )
+        )
+
+    async def run(
+        self,
+        host: str | list[str] = None,
+        port: int | list[port] = None,
+        username: str = "postgres",
+        passfile: str = "./.pgpass",
     ):
         self.EMAIL_REGEX = re.compile(
             r"^([^@\s\"(),:;<>@+[\]]+)(\+[^@\s\"(),:;<>@+[\]]+)?@([a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+\b)(?!\.)$"
         )
+
         self.pool = await asyncpg.create_pool(
-            host=host, port=port, username=username, ssl="require"
+            dsn="postgres://localhost:5432/postgres?sslmode=verify-ca&sslcert=keys%2Fclient.crt&sslkey=keys%2Fclient.key&sslrootcert=keys%2froot.crt",
+            host=host,
+            port=port,
+            user=username,
+            passfile=passfile,
         )
+
         async with self.pool.acquire() as con:
             await con.execute(
                 """
@@ -35,7 +58,7 @@ class db_conn:
                     accounts (
                         id serial PRIMARY KEY,
                         username TEXT NOT NULL UNIQUE,
-                        password TEXT NOT NULL,
+                        password TEXT NOT NULL
                     );
                 """
             )
@@ -44,7 +67,7 @@ class db_conn:
                     CREATE TABLE
                     IF NOT EXISTS
                     personal_info (
-                        account_id int NOT NULL REFRENCES accounts(id),
+                        account_id int NOT NULL REFERENCES accounts(id),
                         first_name VARCHAR (255) NOT NULL,
                         middle_name VARCHAR (255),
                         last_name VARCHAR (255)
@@ -75,3 +98,10 @@ class db_conn:
                 user_email,
                 entered_password,
             )
+
+
+if __name__ == "__main__":
+    conn = db_conn(
+        host="localhost",
+        port="5432",
+    )
