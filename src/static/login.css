@@ -44,3 +44,12 @@ button {
   line-height: 1.4;
   font-style: italic;
 }
+
+/* register html */
+
+.login form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
