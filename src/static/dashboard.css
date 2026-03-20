@@ -151,3 +151,51 @@ body.dashboard {
   border-radius: 8px;
   cursor: pointer;
 }
+
+/* Patient File Transfer Page */
+
+.file-transfer {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 400px;
+  margin: 30px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.file-transfer form {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-transfer label {
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.file-transfer input {
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.file-transfer button {
+  margin-top: 20px;
+  padding: 12px;
+  background: #2f6fed;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Inbox Section */
+.file-inbox {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 400px;
+  margin: 30px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
