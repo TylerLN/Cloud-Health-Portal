@@ -1,0 +1,113 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #dde1e7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Patient & Doctor Dashboard */
+
+body.dashboard {
+  display: block;
+  height: auto;
+  background-color: #dde1e7;
+}
+
+.top-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #004a99;
+  color: white;
+  height: 60px;
+}
+
+.main-layout {
+  display: flex;
+  height: calc(100vh - 60px);
+}
+
+.user-info {
+  text-align: right;
+  line-height: 1.6;
+}
+
+.user-info span {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+  color: white;
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  border-right: 1px solid #ddd;
+  padding-top: 20px;
+}
+
+.nav-bar {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 30px;
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-links li {
+  width: 100%;
+}
+
+.nav-links a {
+  display: block;
+  padding: 15px 25px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.nav-links a:hover {
+  background-color: #f0f7ff;
+  color: #007bff;
+  border-left: 5px solid #007bff;
+}
+
+.disclaimer {
+  max-width: 400px;
+  margin: 20px auto;
+  font-size: 0.8rem;
+  color: #888;
+  text-align: center;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.bottom-disclaimer {
+  position: absolute;
+  text-align: center;
+  font-size: 0.8rem;
+  bottom: 10px;
+  width: 100%;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}

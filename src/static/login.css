@@ -1,0 +1,55 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #dde1e7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Login Page */
+.login {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.disclaimer {
+  max-width: 400px;
+  margin: 20px auto;
+  font-size: 0.8rem;
+  color: #888;
+  text-align: center;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* register html */
+
+.login form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}

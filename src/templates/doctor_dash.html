@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Doctor Dashboard</title>
+    <link rel="stylesheet" href="../static/dashboard.css" />
+  </head>
+  <body class="dashboard">
+    <header class="top-banner">
+      <h1>Medical Portal</h1>
+      <div class="user-info">
+        <span>Welcome, Doctor!</span> <br />
+        <a href="/logout" class="logout-btn">Logout</a>
+      </div>
+    </header>
+
+    <div class="main-layout">
+      <nav class="sidebar">
+        <ul class="nav-links">
+          <li><a href="#records">Medical Records</a></li>
+          <li><a href="#appointments">Appointments</a></li>
+          <li><a href="#chat">Chat</a></li>
+          <li><a href="#profile">Personal Info</a></li>
+        </ul>
+      </nav>
+
+    <div class="main-content">
+        <section id="records">
+        <h2>Medical Records</h2>
+        <p>Access and manage your patients' medical records.</p>
+        </section>
+
+        <section id="appointments">
+        <h2>Appointments</h2>
+        <p>View and manage your schedule of appointments with patients.</p>
+        </section>
+
+        <section id="chat">
+        <h2>Chat</h2>
+        <p>Communicate securely with your patients.</p>
+        </section>
+
+        <section id="profile">
+        <h2>Personal Info</h2>
+        <p>Update your professional information and contact details.</p>
+        </section>
+    </div>
+
+      <p class="disclaimer">
+        <div class="bottom-disclaimer"><strong>Disclaimer:</strong> This is a demo application for educational
+        purposes only. It does not store or transmit any real user data and
+        should not be used in a real medical setting. </div>
+      </p>
+    </div>
+  </body>
+</html>
