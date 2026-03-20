@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Patient Appointments</title>
+    <link rel="stylesheet" href="../static/dashboard.css" />
+  </head>
+  <body class="dashboard">
+    <header class="top-banner">
+      <h1>Medical Portal - Patient Appointments</h1>
+      <div class="user-info">
+        <span>Welcome, Patient!</span> <br />
+        <a href="/logout" class="logout-btn">Logout</a>
+      </div>
+    </header>
+
+    <div class="main-layout">
+      <nav class="sidebar">
+        <ul class="nav-links">
+          <li><a href="/patient_dashboard.html">Dashboard</a></li>
+        </ul>
+      </nav>
+
+    <div class="main-content">
+
+        <section class="schedule-appointment">
+        <h2>Schedule an Appointment</h2>
+        <p>Use the form below to schedule a new appointment with your healthcare provider.</p>
+
+        <form action="/schedule_appointment" method="POST">
+
+          <label for="date">Select Date:</label>
+          <input type="date" id="date" name="date" required />
+
+          <label for="time">Select Time:</label>
+          <input type="time" id="time" name="time" required />
+
+          <label for="doctor">Select Doctor:</label>
+          <select name="doctor" id="doctor" required>
+            <option value="">Select Doctor</option>
+            <option value="Dr. 1">Dr. 1</option>
+          </select>
+
+          <button type="submit">Schedule Appointment</button>
+        </form>
+        </section>
+
+        <div class="bottom-disclaimer">
+            <strong>Disclaimer:</strong> This is a demo application for educational
+            purposes only. It does not store or transmit any real user data and
+            should not be used in a real medical setting.
+        </div>
+    </div>
+  </body>
+</html>
