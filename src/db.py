@@ -144,7 +144,9 @@ class db_conn:
                     SELECT (id, username) from accounts;
                 """
             )
-        return list(resp)
+        resp = [dict(i) for i in resp]
+        resp = [{"id": i["row"][0].hex, "user": i["row"][1]} for i in resp]
+        return resp
 
 
 async def main():
