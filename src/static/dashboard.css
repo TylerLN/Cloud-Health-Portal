@@ -199,3 +199,14 @@ body.dashboard {
   margin: 30px auto;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+/* Patient Dashboard */
+
+.profile-info {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 400px;
+  margin: 30px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
