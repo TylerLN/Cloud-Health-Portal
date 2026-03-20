@@ -20,11 +20,15 @@ class db_conn:
         self.port = port
         self.username = username
         self.passfile = passfile
+        self.pool = None
 
     async def connect(self):
         """
         Creates the connection pool to the database, and creates the required tables if necessary.
         """
+        if None != self.pool:
+            return
+
         self.EMAIL_REGEX = re.compile(
             r"^([^@\s\"(),:;<>@+[\]]+)(\+[^@\s\"(),:;<>@+[\]]+)?@([a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+\b)(?!\.)$"
         )
@@ -130,6 +134,17 @@ class db_conn:
                 entered_password,
             )
         return is_match
+
+    async def return_users(self):
+        await self.connect()
+        resp = {}
+        async with self.pool.acquire() as con:
+            resp = await con.fetch(
+                """
+                    SELECT (id, username) from accounts;
+                """
+            )
+        return list(resp)
 
 
 async def main():
