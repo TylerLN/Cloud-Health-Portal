@@ -1,2 +1,4 @@
 falcon >= 4.2.0
 asyncpg == 0.31.0
+pyseto >= 1.9.1
+

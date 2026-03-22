@@ -21,6 +21,7 @@ class db_conn:
         self.username = username
         self.passfile = passfile
         self.pool = None
+        self.connected = False
 
     async def connect(self):
         """
@@ -40,6 +41,8 @@ class db_conn:
             user=self.username,
             passfile=self.passfile,
         )
+
+        self.connected = True
 
         async with self.pool.acquire() as con:
             await con.execute(
@@ -80,7 +83,6 @@ class db_conn:
         :param user_email: the username of the account to search for.
         :return: a bool representing weather or not the account exists.
         """
-        account_exists = False
         async with self.pool.aquire() as con:
             account_exists = await con.fetchval(
                 """
@@ -90,38 +92,35 @@ class db_conn:
             )
         return account_exists
 
-    async def create_account(self, user_email: str, user_password: str) -> int or False:
+    async def create_account(self, user_email: str, user_password: str) -> int or None:
         """
         Create or update the password of the given user.
 
         :param user_email: email address of the account to create or update.
         :param user_password: The new password of the account.
-        :return: the account id of the created / updated account. Returns False if the account is not created.
+        :return: the account id of the created / updated account. Returns None if the account is not created.
         """
-        account_id = False
         async with self.pool.acquire() as con:
             account_id = await con.fetchval(
                 """
                     INSERT INTO accounts(username,password)
                     VALUES ($1,crypt($2, gen_salt('bf')))
-                    ON CONFLICT (username) DO UPDATE
-                    SET PASSWORD = crypt($2, gen_salt('bf'))
-                    RETURNING NEW.id;
+                    ON CONFLICT (username) DO NOTHING
+                    RETURNING id;
                 """,
                 user_email,
                 user_password,
             )
         return account_id
 
-    async def check_password(self, user_email: str, entered_password: str) -> bool:
+    async def check_password(self, username: str, password: str) -> bool:
         """
         Check to see if the entered username password pair is correct.
 
-        :param user_email: The email of the user to check
-        :param entered_password: The candidate password for the given user
+        :param username: The email of the user to check
+        :param password: The candidate password for the given user
         :return: bool representing wether or not the pair is correct or not.
         """
-        is_match = False
         async with self.pool.acquire() as con:
             is_match = await con.fetchval(
                 """
@@ -136,7 +135,9 @@ class db_conn:
         return is_match
 
     async def return_users(self):
-        await self.connect()
+        """
+        This seems insecure, remove later.
+        """
         resp = {}
         async with self.pool.acquire() as con:
             resp = await con.fetch(

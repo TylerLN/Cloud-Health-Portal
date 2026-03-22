@@ -7,10 +7,13 @@ import src.db as db
 
 
 class dbMiddle:
-    async def process_startup(self, scope, event):
-        asyncio.create_task(db.connect())
-        print("funny1!")
-        await db.connect()
+    def __init__(self, db):
+        self.db = db
+
+    async def process_resource(self, req, resp, resource, params):
+        if not self.db.connected:
+            async with asyncio.TaskGroup() as tg:
+                task1 = tg.create_task(self.db.connect())
 
 
 class api:
@@ -25,14 +28,49 @@ class usersApi:
         self.db = db
 
     async def on_get(self, req, resp):
+        try:
+            users = await self.db.return_users()
+            resp.status = falcon.HTTP_200
+            resp.media = {"status": "success", "users": users}
+        except:
+            resp.status = falcon.HTTP_500
+            resp.media = {"status": "failure"}
+
+    async def on_post_register(self, req, resp):
         # try:
-        users = await self.db.return_users()
+        form = await req.get_media()
+        username = None
+        password = None
+        async for part in form:
+            match (part.name):
+                case "username":
+                    username = await part.text
+                case "password":
+                    password = await part.text
+        if None == username or None == password:
+            resp.status = falcon.HTTP_500
+            resp.media = {
+                "status": "failure",
+                "message": "please provide username and password",
+                "err": "2",
+            }
+            return
+        users = await self.db.create_account(username, password)
         resp.status = falcon.HTTP_200
-        resp.media = {"status": "success", "users": users}
+        if None == users:
+            resp.media = {
+                "status": "failure",
+                "message": "account with username already exists",
+                "err": "1",
+            }
+        else:
+            resp.media = {
+                "status": "success",
+            }
 
     # except:
-    # resp.status = falcon.HTTP_500
-    # resp.media = {"status": "failure"}
+    #     resp.status = falcon.HTTP_500
+    #     resp.media = {"status": "failure"}
 
 
 data = db.db_conn(
@@ -42,7 +80,7 @@ data = db.db_conn(
 
 app = falcon.asgi.App(
     middleware=[
-        dbMiddle(),
+        dbMiddle(data),
     ],
 )
 a = api()
@@ -50,3 +88,4 @@ users = usersApi(data)
 
 app.add_route("/api/v1", a)
 app.add_route("/api/v1/users", users)
+app.add_route("/api/v1/users/register", users, suffix="register")
