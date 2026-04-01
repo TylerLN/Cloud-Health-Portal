@@ -12,7 +12,7 @@ class db_conn:
     def __init__(
         self,
         host: str | list[str] = None,
-        port: int | list[port] = None,
+        port: int | list[int] = None,
         username: str = "postgres",
         passfile: str = "./.pgpass",
     ):
@@ -129,8 +129,8 @@ class db_conn:
                     FROM accounts
                     WHERE username = $1;
                 """,
-                user_email,
-                entered_password,
+                username,
+                password,
             )
         return is_match
 
@@ -159,13 +159,7 @@ async def main():
 
     account = await conn.create_account("jnellesen@csu.fullerton.edu", "12345")
 
-    print(f"{type(account)} : {account}")
-    print(
-        f"{isinstance(account, uuid.UUID)} : {uuid.UUID('019d0912-f051-7131-adcd-3d1bc616b622') == account}"
-    )
-
     ismatch = await conn.check_password("jnellesen@csu.fullerton.edu", "12345")
-    print(f"{type(ismatch)} : {ismatch}")
     print(f"is 12345 correct? {'yes' if ismatch else 'no'}")
     ismatch = await conn.check_password("jnellesen@csu.fullerton.edu", "0")
     print(f"is 0 correct? {'yes' if ismatch else 'no'}")
