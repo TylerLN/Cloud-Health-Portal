@@ -53,3 +53,12 @@ button {
   align-items: center;
   gap: 15px;
 }
+
+.bottom-disclaimer {
+  max-width: 400px;
+  margin: 20px auto;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #888;
+  font-style: italic;
+}

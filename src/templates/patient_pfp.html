@@ -2,12 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Patient Dashboard</title>
+    <title>Patient Profile Page</title>
     <link rel="stylesheet" href="../static/dashboard.css" />
   </head>
   <body class="dashboard">
     <header class="top-banner">
-      <h1>Medical Portal - Patient Dashboard</h1>
+      <h1>Medical Portal - Patient Profile Page</h1>
       <div class="user-info">
         <span>Welcome, Patient!</span> <br />
         <a href="/logout" class="logout-btn">Logout</a>
@@ -17,31 +17,20 @@
     <div class="main-layout">
       <nav class="sidebar">
         <ul class="nav-links">
+          <li><a href="/patient_dash.html">Dashboard</a></li>
           <li><a href="/patient_appointments.html">Appointments</a></li>
           <li>
             <a href="/patient_filetransfer.html">File Transfer & Inbox</a>
           </li>
-          <li><a href="/patient_pfp.html">Patient Profile</a></li>
         </ul>
       </nav>
 
       <div class="main-content">
-        <section id="appointments">
-          <h2>Appointments</h2>
-          <p>
-            Schedule and manage your appointments with healthcare providers.
-          </p>
-        </section>
-
-        <section id="files">
-          <h2>File Inbox</h2>
-          <p>View and manage your files and documents.</p>
-        </section>
-
-        <section id="profile">
-          <h2>Personal Info</h2>
-          <p>Update your personal information and contact details.</p>
-        </section>
+        <h2>Patient Profile</h2>
+        <div class="profile-info">
+          <p><strong>Name:</strong> John Doe</p>
+          <p><strong>Healthcare Provider: </strong> Dr. Smith</p>
+        </div>
 
         <div class="bottom-disclaimer">
           <strong>Disclaimer:</strong> This is a demo application for

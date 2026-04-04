@@ -100,14 +100,122 @@ body.dashboard {
 }
 
 .bottom-disclaimer {
-  position: absolute;
-  text-align: center;
-  font-size: 0.8rem;
+  position: fixed;
   bottom: 10px;
   width: 100%;
+  text-align: 20px;
+  font-size: 0.8rem;
+  color: #888;
+  line-height: 1.4;
+  font-style: italic;
 }
-
 .main-content {
   flex: 1;
   padding: 20px;
+}
+
+/* Patient Appointments Page - Schedule */
+.upcoming-appointments {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 400px;
+  margin: 30px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-appointment {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 400px;
+  margin: 30px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-appointment form {
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-appointment label {
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.schedule-appointment input,
+.schedule-appointment select {
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.schedule-appointment button {
+  margin-top: 20px;
+  padding: 12px;
+  background: #2f6fed;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Patient File Transfer Page */
+
+.file-transfer {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 400px;
+  margin: 30px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.file-transfer form {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-transfer label {
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.file-transfer input {
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.file-transfer button {
+  margin-top: 20px;
+  padding: 12px;
+  background: #2f6fed;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Inbox Section */
+.file-inbox {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 400px;
+  margin: 30px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Patient Dashboard */
+
+.profile-info {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 400px;
+  margin: 30px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
