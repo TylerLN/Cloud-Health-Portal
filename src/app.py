@@ -52,7 +52,9 @@ class patientFiletransferApi(authRequired):
             match (part.name):
                 case "file":
                     async with session.client("s3") as s3:
-                        await s3.upload_fileobj(part.stream, "testbucket", "testkey")
+                        await s3.upload_fileobj(
+                            part.stream, "file-transfers-bucket-cpsc-454", "testkey"
+                        )
 
 
 class loginApi:
