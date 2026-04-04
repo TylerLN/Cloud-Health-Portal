@@ -2,8 +2,14 @@ import asyncio
 
 import falcon
 import falcon.asgi
+import pyseto
 
+import src.auth as auth
 import src.db as db
+
+
+class authRequired:
+    pass
 
 
 class dbMiddle:
@@ -14,6 +20,14 @@ class dbMiddle:
         if not self.db.connected:
             async with asyncio.TaskGroup() as tg:
                 task1 = tg.create_task(self.db.connect())
+
+
+class authMiddle:
+    def __init__(self, auth):
+        self.auth = auth
+
+    async def process_resource(self, req, resp, resource, params):
+        pass
 
 
 class api:
@@ -55,13 +69,14 @@ class loginApi:
                     "err": "1",
                 }
             else:
+
                 resp.media = {
                     "status": "success",
                 }
         except:
             resp.status = falcon.HTTP_500
             resp.media = {"status": "failure"}
-        
+
 
 class usersApi:
     def __init__(self, db):
@@ -110,16 +125,21 @@ class usersApi:
         except:
             resp.status = falcon.HTTP_500
             resp.media = {"status": "failure"}
-    
+
 
 data = db.db_conn(
     host="127.0.0.1",
     port="5432",
 )
 
+key = b"FunyKEy"
+
+tokens = auth.auth_giver(key=key)
+
 app = falcon.asgi.App(
     middleware=[
         dbMiddle(data),
+        authMiddle(tokens),
     ],
 )
 a = api()
@@ -128,4 +148,3 @@ users = usersApi(data)
 app.add_route("/api/v1", a)
 app.add_route("/api/v1/users", users)
 app.add_route("/api/v1/users/register", users, suffix="register")
-
