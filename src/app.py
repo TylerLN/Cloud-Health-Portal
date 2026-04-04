@@ -1,5 +1,6 @@
 import asyncio
 
+import aioboto3
 import falcon
 import falcon.asgi
 import pyseto
@@ -27,14 +28,31 @@ class authMiddle:
         self.auth = auth
 
     async def process_resource(self, req, resp, resource, params):
-        pass
+        if isinstance(resource, authRequired):
+            authenticated = False
+            if not authenticated:
+                resp.status = falcon.HTTP_403
+                resp.media = {"status": "Unauthenticated"}
+                resp.complete = True
 
 
 class api:
     async def on_get(self, req, resp):
-
         resp.status = falcon.HTTP_200
         resp.media = {"server": "is running"}
+
+
+class patientFiletransferApi(authRequired):
+    def __init__(self, session):
+        self.session = session
+
+    async def on_post(self, req, resp, user_id=None):
+        form = await req.get_media()
+        async for part in form:
+            match (part.name):
+                case "file":
+                    async with session.client("s3") as s3:
+                        await s3.upload_fileobj(part.stream, "testbucket", "testkey")
 
 
 class loginApi:
