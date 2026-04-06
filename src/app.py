@@ -58,11 +58,13 @@ class patientFiletransferApi(authRequired):
 
 
 class loginApi:
-    def __init__(self, db):
+    def __init__(self, db, auth):
         self.db = db
+        self.auth = auth
 
     async def on_post(self, req, resp):
         try:
+            breakpoint()
             form = await req.get_media()
             username = None
             password = None
@@ -73,7 +75,7 @@ class loginApi:
                     case "password":
                         password = await part.text
             if None == username or None == password:
-                resp.status = falcon.HTTP_500
+                resp.status = falcon.HTTP_400
                 resp.media = {
                     "status": "failure",
                     "message": "please provide username and password",
@@ -81,15 +83,15 @@ class loginApi:
                 }
                 return
             login = await self.db.check_password(username, password)
-            resp.status = falcon.HTTP_200
-            if not login:
+            if None == login or True != login[0]:
+                resp.status = falcon.HTTP_401
                 resp.media = {
                     "status": "failure",
                     "message": "username and password pair are not correct",
                     "err": "1",
                 }
             else:
-
+                resp.status = falcon.HTTP_200
                 resp.media = {
                     "status": "success",
                 }
@@ -101,15 +103,6 @@ class loginApi:
 class usersApi:
     def __init__(self, db):
         self.db = db
-
-    async def on_get(self, req, resp):
-        try:
-            users = await self.db.return_users()
-            resp.status = falcon.HTTP_200
-            resp.media = {"status": "success", "users": users}
-        except:
-            resp.status = falcon.HTTP_500
-            resp.media = {"status": "failure"}
 
     async def on_post_register(self, req, resp):
         try:
@@ -164,7 +157,8 @@ app = falcon.asgi.App(
 )
 a = api()
 users = usersApi(data)
+login = loginApi(data, tokens)
 
 app.add_route("/api/v1", a)
-app.add_route("/api/v1/users", users)
 app.add_route("/api/v1/users/register", users, suffix="register")
+app.add_route("/api/v1/login", login)

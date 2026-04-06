@@ -113,41 +113,29 @@ class db_conn:
             )
         return account_id
 
-    async def check_password(self, username: str, password: str) -> bool:
+    async def check_password(
+        self, username: str, password: str
+    ) -> (bool, uuid.UUID) | None:
         """
         Check to see if the entered username password pair is correct.
 
         :param username: The email of the user to check
         :param password: The candidate password for the given user
-        :return: bool representing wether or not the pair is correct or not.
+        :return: returns None if the username is not associated with an account, or a tuple containing. A bool representing if the password is correct, and the uuid of the account.
         """
         async with self.pool.acquire() as con:
-            is_match = await con.fetchval(
+            is_match = await con.fetchrow(
                 """
                     SELECT (password = crypt($2, password))
-                    AS pswmatch
+                    AS pswmatch,
+                    id
                     FROM accounts
                     WHERE username = $1;
                 """,
                 username,
                 password,
             )
-        return is_match
-
-    async def return_users(self):
-        """
-        This seems insecure, remove later.
-        """
-        resp = {}
-        async with self.pool.acquire() as con:
-            resp = await con.fetch(
-                """
-                    SELECT (id, username) from accounts;
-                """
-            )
-        resp = [dict(i) for i in resp]
-        resp = [{"id": i["row"][0].hex, "user": i["row"][1]} for i in resp]
-        return resp
+        return None if is_match == None else tuple(is_match)
 
 
 async def main():
