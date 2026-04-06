@@ -29,7 +29,7 @@ class authMiddle:
 
     async def process_resource(self, req, resp, resource, params):
         if isinstance(resource, authRequired):
-            authenticated = False
+            authenticated, uid = self.auth.is_authenticated()
             if not authenticated:
                 resp.status = falcon.HTTP_403
                 resp.media = {"status": "Unauthenticated"}
