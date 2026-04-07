@@ -19,7 +19,7 @@ resource "aws_db_instance" "app_db" {
 
   db_name  = "appdb"
   username = "admin"
-  password = "TODO" // fill this in after, should put in env or somewhere secure (not hardcoded) 
+  password = var.rds_password
   port     = 5432
 
   vpc_security_group_ids = [aws_security_group.db_sg.id]            // who can access
