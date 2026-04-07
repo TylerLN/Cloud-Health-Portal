@@ -45,15 +45,12 @@ class db_conn:
         self.connected = True
 
         async with self.pool.acquire() as con:
-            await con.execute(
-                """
+            await con.execute("""
                     CREATE EXTENSION
                     IF NOT EXISTS
                     pgcrypto;
-                """
-            )
-            await con.execute(
-                """
+                """)
+            await con.execute("""
                     CREATE TABLE
                     IF NOT EXISTS
                     accounts (
@@ -61,10 +58,8 @@ class db_conn:
                         username TEXT NOT NULL UNIQUE,
                         password TEXT NOT NULL
                     );
-                """
-            )
-            await con.execute(
-                """
+                """)
+            await con.execute("""
                     CREATE TABLE
                     IF NOT EXISTS
                     personal_info (
@@ -73,8 +68,7 @@ class db_conn:
                         middle_name VARCHAR (255),
                         last_name VARCHAR (255)
                     );
-                """
-            )
+                """)
 
     async def account_exists(self, user_email: str) -> bool:
         """
@@ -115,7 +109,7 @@ class db_conn:
 
     async def check_password(
         self, username: str, password: str
-    ) -> (bool, uuid.UUID) | None:
+    ) -> None or (bool, uuid.UUID):
         """
         Check to see if the entered username password pair is correct.
 

@@ -1,4 +1,5 @@
 import asyncio
+import json
 
 import aioboto3
 import falcon
@@ -29,7 +30,7 @@ class authMiddle:
 
     async def process_resource(self, req, resp, resource, params):
         if isinstance(resource, authRequired):
-            authenticated, uid = self.auth.is_authenticated()
+            authenticated, uid = self.auth.is_authenticated(req.auth)
             if not authenticated:
                 resp.status = falcon.HTTP_403
                 resp.media = {"status": "Unauthenticated"}
@@ -64,17 +65,8 @@ class loginApi:
 
     async def on_post(self, req, resp):
         try:
-            breakpoint()
             form = await req.get_media()
-            username = None
-            password = None
-            async for part in form:
-                match (part.name):
-                    case "username":
-                        username = await part.text
-                    case "password":
-                        password = await part.text
-            if None == username or None == password:
+            if "username" not in form or "password" not in form:
                 resp.status = falcon.HTTP_400
                 resp.media = {
                     "status": "failure",
@@ -82,7 +74,7 @@ class loginApi:
                     "err": "2",
                 }
                 return
-            login = await self.db.check_password(username, password)
+            login = await self.db.check_password(form["username"], form["password"])
             if None == login or True != login[0]:
                 resp.status = falcon.HTTP_401
                 resp.media = {
@@ -94,6 +86,8 @@ class loginApi:
                 resp.status = falcon.HTTP_200
                 resp.media = {
                     "status": "success",
+                    "refresh": self.auth.new_refresh_token(login[1]),
+                    "bearer": self.auth.new_token(login[1]),
                 }
         except:
             resp.status = falcon.HTTP_500
@@ -107,15 +101,7 @@ class usersApi:
     async def on_post_register(self, req, resp):
         try:
             form = await req.get_media()
-            username = None
-            password = None
-            async for part in form:
-                match (part.name):
-                    case "username":
-                        username = await part.text
-                    case "password":
-                        password = await part.text
-            if None == username or None == password:
+            if "username" not in form or "password" not in form:
                 resp.status = falcon.HTTP_500
                 resp.media = {
                     "status": "failure",
@@ -123,7 +109,7 @@ class usersApi:
                     "err": "2",
                 }
                 return
-            users = await self.db.create_account(username, password)
+            users = await self.db.create_account(form["username"], form["password"])
             resp.status = falcon.HTTP_200
             if None == users:
                 resp.media = {
