@@ -9,6 +9,9 @@ resource "aws_lb" "app_alb" {
     aws_subnet.public_a.id,
     aws_subnet.public_b.id
   ]
+  // prevent deletion of ALB 
+  // set to false for development, but should be true for compliance
+  enable_deletion_protection = false
 
   tags = {
     Name = "app-alb"

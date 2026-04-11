@@ -38,12 +38,23 @@ resource "aws_subnet" "private_app" {
 }
 
 // Separate private subnet & availability zone for database
-resource "aws_subnet" "private_db" {
+resource "aws_subnet" "private_db_a" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.3.0/24"
-  availability_zone = "us-west-2b"
+  cidr_block        = "10.0.6.0/24"
+  availability_zone = "us-west-2a"
+
   tags = {
-    Name = "private-db-subnet"
+    Name = "private-db-subnet-a"
+  }
+}
+
+resource "aws_subnet" "private_db_b" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.5.0/24"
+  availability_zone = "us-west-2b"
+
+  tags = {
+    Name = "private-db-subnet-b"
   }
 }
 
