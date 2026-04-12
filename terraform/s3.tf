@@ -44,6 +44,9 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "file_transfers" {
   }
 }
 
+// Commented out since ALB accepts http traffic but should be enabled for compliance
+// Certificate Manager for ALB https listerer requires domain but that costs money, so sticking with http
+/*
 // enable https only access to the S3 bucket
 resource "aws_s3_bucket_policy" "https_only" {
   bucket = aws_s3_bucket.file_transfers.id
@@ -69,4 +72,4 @@ resource "aws_s3_bucket_policy" "https_only" {
     ]
   })
 }
-
+*/
