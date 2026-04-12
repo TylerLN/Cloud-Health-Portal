@@ -3,6 +3,7 @@ import json
 from uuid import UUID
 
 import pyseto
+from pyseto import DecryptError, VerifyError
 
 
 class auth_giver:
@@ -36,12 +37,14 @@ class auth_giver:
     def is_authenticated(self, token):
         try:
             decoded = pyseto.decode(self.key, token, deserializer=json)
+            ## checks if token is auth token, if it isnt then invalid for authentication
+            if decoded.payload["data"]["token_type"] != "auth_token":
+                return (False, None)
             ## TODO: check expired
             return (
                 True,
                 UUID(decoded.payload["data"]["uid"]),
             )
-        except DecryptError as e:
-            return (False, None)
-        except VerifyError as e:
+        ## if any errors during decoding, token invalid
+        except (DecryptError, VerifyError, KeyError, ValueError, TypeError):
             return (False, None)

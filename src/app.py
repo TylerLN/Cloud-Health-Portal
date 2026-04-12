@@ -8,42 +8,16 @@ import pyseto
 
 import src.auth as auth
 import src.db as db
-
-
-class authRequired:
-    pass
-
-
-class dbMiddle:
-    def __init__(self, db):
-        self.db = db
-
-    async def process_resource(self, req, resp, resource, params):
-        if not self.db.connected:
-            async with asyncio.TaskGroup() as tg:
-                task1 = tg.create_task(self.db.connect())
-
-
-class authMiddle:
-    def __init__(self, auth):
-        self.auth = auth
-
-    async def process_resource(self, req, resp, resource, params):
-        if isinstance(resource, authRequired):
-            authenticated, uid = self.auth.is_authenticated(req.auth)
-            if not authenticated:
-                resp.status = falcon.HTTP_403
-                resp.media = {"status": "Unauthenticated"}
-                resp.complete = True
-
+import src.users as users
+from src.middleware import AuthRequired, authMiddle, dbMiddle
 
 class api:
     async def on_get(self, req, resp):
         resp.status = falcon.HTTP_200
         resp.media = {"server": "is running"}
 
-
-class patientFiletransferApi(authRequired):
+# we can prob make a separate file for s3filetransfer logic
+class patientFiletransferApi(AuthRequired):
     def __init__(self, session):
         self.session = session
 
@@ -52,78 +26,10 @@ class patientFiletransferApi(authRequired):
         async for part in form:
             match (part.name):
                 case "file":
-                    async with session.client("s3") as s3:
+                    async with self.session.client("s3") as s3:
                         await s3.upload_fileobj(
                             part.stream, "file-transfers-bucket-cpsc-454", "testkey"
                         )
-
-
-class loginApi:
-    def __init__(self, db, auth):
-        self.db = db
-        self.auth = auth
-
-    async def on_post(self, req, resp):
-        try:
-            form = await req.get_media()
-            if "username" not in form or "password" not in form:
-                resp.status = falcon.HTTP_400
-                resp.media = {
-                    "status": "failure",
-                    "message": "please provide username and password",
-                    "err": "2",
-                }
-                return
-            login = await self.db.check_password(form["username"], form["password"])
-            if None == login or True != login[0]:
-                resp.status = falcon.HTTP_401
-                resp.media = {
-                    "status": "failure",
-                    "message": "username and password pair are not correct",
-                    "err": "1",
-                }
-            else:
-                resp.status = falcon.HTTP_200
-                resp.media = {
-                    "status": "success",
-                    "refresh": self.auth.new_refresh_token(login[1]),
-                    "bearer": self.auth.new_token(login[1]),
-                }
-        except:
-            resp.status = falcon.HTTP_500
-            resp.media = {"status": "failure"}
-
-
-class usersApi:
-    def __init__(self, db):
-        self.db = db
-
-    async def on_post_register(self, req, resp):
-        try:
-            form = await req.get_media()
-            if "username" not in form or "password" not in form:
-                resp.status = falcon.HTTP_500
-                resp.media = {
-                    "status": "failure",
-                    "message": "please provide username and password",
-                    "err": "2",
-                }
-                return
-            users = await self.db.create_account(form["username"], form["password"])
-            resp.status = falcon.HTTP_200
-            if None == users:
-                resp.media = {
-                    "status": "failure",
-                    "message": "account with username already exists",
-                    "err": "1",
-                }
-            else:
-                resp.media = {
-                    "status": "success",
-                }
-        except:
-            resp.status = falcon.HTTP_500
-            resp.media = {"status": "failure"}
 
 
 data = db.db_conn(
@@ -138,12 +44,12 @@ tokens = auth.auth_giver(key=key)
 app = falcon.asgi.App(
     middleware=[
         dbMiddle(data),
-        authMiddle(tokens),
+        authMiddle(tokens, data),
     ],
 )
 a = api()
-users = usersApi(data)
-login = loginApi(data, tokens)
+users = users.RegisterApi(data)
+login = users.LoginApi(data, tokens)
 
 app.add_route("/api/v1", a)
 app.add_route("/api/v1/users/register", users, suffix="register")
