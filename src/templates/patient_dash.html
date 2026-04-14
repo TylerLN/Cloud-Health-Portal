@@ -5,23 +5,25 @@
     <title>Patient Dashboard</title>
     <link rel="stylesheet" href="../static/dashboard.css" />
   </head>
+
   <body class="dashboard">
     <header class="top-banner">
       <h1>Medical Portal - Patient Dashboard</h1>
+
       <div class="user-info">
-        <span>Welcome, Patient {{ patient_name }}!</span> <br />
-        <a href="/logout" class="logout-btn">Logout</a>
+        <span id="user-info">Welcome, Patient</span> <br />
+        <button id="logout-btn" class="logout-btn">Logout</button>
       </div>
     </header>
 
     <div class="main-layout">
       <nav class="sidebar">
         <ul class="nav-links">
-          <li><a href="/patient_appointments.html">Appointments</a></li>
+          <li><a href="patient_appointments.html">Appointments</a></li>
           <li>
-            <a href="/patient_filetransfer.html">File Transfer & Inbox</a>
+            <a href="patient_filetransfer.html">File Transfer & Inbox</a>
           </li>
-          <li><a href="/patient_pfp.html">Patient Profile</a></li>
+          <li><a href="patient_pfp.html">Patient Profile</a></li>
         </ul>
       </nav>
 
@@ -40,7 +42,7 @@
 
         <section id="profile">
           <h2>Personal Info</h2>
-          <p>Update your personal information and contact details.</p>
+          <p>View your information and Provider</p>
         </section>
 
         <div class="bottom-disclaimer">
@@ -50,5 +52,7 @@
         </div>
       </div>
     </div>
+
+    <script src="../static/app.js"></script>
   </body>
 </html>

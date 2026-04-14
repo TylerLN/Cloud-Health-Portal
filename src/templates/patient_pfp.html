@@ -5,39 +5,49 @@
     <title>Patient Profile Page</title>
     <link rel="stylesheet" href="../static/dashboard.css" />
   </head>
+
   <body class="dashboard">
-    <header class="top-banner">
-      <h1>Medical Portal - Patient Profile Page</h1>
-      <div class="user-info">
-        <span>Welcome, Patient {{ patient_name }}!</span> <br />
-        <a href="/logout" class="logout-btn">Logout</a>
-      </div>
-    </header>
-
-    <div class="main-layout">
-      <nav class="sidebar">
-        <ul class="nav-links">
-          <li><a href="/patient_dash.html">Dashboard</a></li>
-          <li><a href="/patient_appointments.html">Appointments</a></li>
-          <li>
-            <a href="/patient_filetransfer.html">File Transfer & Inbox</a>
-          </li>
-        </ul>
-      </nav>
-
-      <div class="main-content">
-        <h2>Patient Profile</h2>
-        <div class="profile-info">
-          <p><strong>Name:</strong> John Doe</p>
-          <p><strong>Healthcare Provider: </strong> Dr. Smith</p>
+    <div id="dashboard">
+      <header class="top-banner">
+        <h1>Medical Portal - Patient Profile</h1>
+        <div class="user-info">
+          <span id="user-info">Welcome...</span> <br />
+          <button id="logout-btn" class="logout-btn">Logout</button>
         </div>
+      </header>
 
-        <div class="bottom-disclaimer">
-          <strong>Disclaimer:</strong> This is a demo application for
-          educational purposes only. It does not store or transmit any real user
-          data and should not be used in a real medical setting.
+      <div class="main-layout">
+        <nav class="sidebar">
+          <ul class="nav-links">
+            <li><a href="patient_dash.html">Dashboard</a></li>
+            <li><a href="patient_appointments.html">Appointments</a></li>
+            <li>
+              <a href="patient_filetransfer.html">File Transfer & Inbox</a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="main-content">
+          <h2>Patient Profile</h2>
+
+          <div class="profile-info">
+            <p>
+              <strong>Name:</strong> <span id="profile-name">Loading...</span>
+            </p>
+            <p>
+              <strong>Healthcare Provider:</strong>
+              <span id="profile-doctor">Loading...</span>
+            </p>
+          </div>
+
+          <div class="bottom-disclaimer">
+            <strong>Disclaimer:</strong> This is a demo application for
+            educational purposes only.
+          </div>
         </div>
       </div>
     </div>
+
+    <script src="../static/app.js"></script>
   </body>
 </html>

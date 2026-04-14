@@ -12,9 +12,8 @@
         <h1>Medical Health Portal</h1>
         <h3>Create your account</h3>
 
-        <form action="/register" method="POST" class="login-form">
+        <form action="register-form" class="login-form">
           <input type="text" name="username" placeholder="Username" required />
-
           <input
             type="password"
             name="password"
@@ -38,6 +37,8 @@
           <button type="submit">Register</button>
         </form>
 
+        <p class="error-message" style="color: red"></p>
+
         <p>Already have an account? <a href="/login.html">Login here</a></p>
 
         <div class="bottom-disclaimer">
@@ -47,5 +48,7 @@
         </div>
       </div>
     </div>
+
+    <script src="../static/app.js"></script>
   </body>
 </html>
