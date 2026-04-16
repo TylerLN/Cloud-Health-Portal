@@ -168,8 +168,8 @@ class db_conn:
     functions for appointments & doctor-patient relationships
     """
 
-    # get current user info for RBAC and frontend purposes
-    async def get_user_info(self, user_id: uuid.UUID):
+    # get current user id for RBAC and frontend purposes, reutrns user_id
+    async def get_user_id(self, user_id: uuid.UUID):
         async with self.pool.acquire() as con:
             return await con.fetchrow(
                 """
@@ -178,6 +178,18 @@ class db_conn:
                     WHERE id = $1;
                 """,
                 user_id,
+            )
+    
+    # get current user username for doctor registration whitelist method, return username.
+    async def get_user_username(self, username: str):
+        async with self.pool.acquire() as con:
+            return await con.fetchrow(
+                """
+                    SELECT id, username, role
+                    FROM accounts 
+                    WHERE username = $1;
+                """,
+                username,
             )
         
     # get all doctors in system in the case there are 1+ doctors
