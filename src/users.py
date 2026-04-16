@@ -70,6 +70,7 @@ class LoginApi:
                     "status": "success",
                     "refresh": self.auth.new_refresh_token(login[1]),
                     "bearer": self.auth.new_token(login[1]),
+                    "role": login[2],
                 }
         except:
             resp.status = falcon.HTTP_500
