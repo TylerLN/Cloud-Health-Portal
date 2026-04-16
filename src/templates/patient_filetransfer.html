@@ -7,73 +7,75 @@
   </head>
 
   <body class="dashboard">
-    <header class="top-banner">
-      <h1>Medical Portal - Patient File Transfer & Inbox</h1>
-      <div class="user-info">
-        <span>Welcome, Patient {{ patient_name }}!</span><br />
-        <a href="/logout" class="logout-btn">Logout</a>
-      </div>
-    </header>
+    <div id="dashboard">
+      <header class="top-banner">
+        <h1>Medical Portal - Patient File Transfer & Inbox</h1>
+        <div class="user-info">
+          <span>Welcome, Patient </span><br />
+          <button id="logout-btn" class="logout-btn">Logout</button>
+        </div>
+      </header>
 
-    <div class="main-layout">
-      <nav class="sidebar">
-        <ul class="nav-links">
-          <li><a href="/patient_dashboard.html">Dashboard</a></li>
-          <li><a href="/patient_appointments.html">Appointments</a></li>
-          <li><a href="/patient_pfp.html">Patient Profile</a></li>
-        </ul>
-      </nav>
+      <div class="main-layout">
+        <nav class="sidebar">
+          <ul class="nav-links">
+            <li><a href="patient_dashboard.html">Dashboard</a></li>
+            <li><a href="patient_appointments.html">Appointments</a></li>
+            <li><a href="patient_pfp.html">Patient Profile</a></li>
+          </ul>
+        </nav>
 
-      <div class="main-content">
-        <section class="file-inbox">
-          <h2>Inbox</h2>
-          <div id="file-list">
-            <p>No files available.</p>
+        <div class="main-content">
+          <section class="file-inbox">
+            <h2>Inbox</h2>
+            <div id="file-list">
+              <p>Loading files...</p>
+            </div>
+          </section>
+
+          <section class="file-transfer">
+            <h2>File Transfer</h2>
+            <p>
+              Use the form below to transfer files securely between you and your
+              healthcare provider.
+            </p>
+
+            <form id="file-transfer-form" enctype="multipart/form-data">
+              <label for="file">Select File:</label>
+              <input type="file" id="file" name="file" required />
+
+              <label for="subject">Subject:</label>
+              <input
+                type="text"
+                id="subject"
+                name="subject"
+                placeholder="Enter subject"
+                required
+              />
+
+              <label for="description">Description:</label>
+              <textarea
+                id="description"
+                name="description"
+                placeholder="Enter description about the file."
+                rows="3"
+              ></textarea>
+
+              <button type="submit">Transfer File</button>
+            </form>
+
+            <p id="file-transfer-message"></p>
+          </section>
+
+          <div class="bottom-disclaimer">
+            <strong>Disclaimer:</strong> This is a demo application for
+            educational purposes only. It does not store or transmit any real
+            user data and should not be used in a real medical setting.
           </div>
-        </section>
-
-        <section class="file-transfer">
-          <h2>File Transfer</h2>
-          <p>
-            Use the form below to transfer files securely between you and your
-            healthcare provider.
-          </p>
-
-          <form
-            action="/transfer_file"
-            method="POST"
-            enctype="multipart/form-data"
-          >
-            <label for="file">Select File:</label>
-            <input type="file" id="file" name="file" required />
-
-            <label for="subject">Subject:</label>
-            <input
-              type="text"
-              id="subject"
-              name="subject"
-              placeholder="Enter subject"
-              required
-            />
-
-            <label for="description">Description:</label>
-            <textarea
-              id="description"
-              name="description"
-              placeholder="Enter description about the file."
-              rows="3"
-            ></textarea>
-
-            <button type="submit">Transfer File</button>
-          </form>
-        </section>
-
-        <div class="bottom-disclaimer">
-          <strong>Disclaimer:</strong> This is a demo application for
-          educational purposes only. It does not store or transmit any real user
-          data and should not be used in a real medical setting.
         </div>
       </div>
     </div>
+
+    <script src="../static/app.js"></script>
   </body>
 </html>
