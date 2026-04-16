@@ -34,7 +34,7 @@ class authMiddle:
                 resp.complete = True
                 return
             
-            user = await self.db.get_user_info(uid)
+            user = await self.db.get_user_id(uid)
             
             if user is None:
                 resp.status = falcon.HTTP_403
