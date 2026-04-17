@@ -2,7 +2,9 @@
 
 import falcon
 from src.middleware import AuthRequired
+import re
 
+# whitelist of doctors and paitnets for demo and autoassign relationship, default doctor is assigned to all patients
 WHITELIST = {
     "doctor1@hospital.com" : "doctor",
     "patient1@hospital.com" : "patient",
@@ -11,6 +13,16 @@ WHITELIST = {
 }
 
 DEFAULT_DOCTOR_USERNAME = "doctor1@hospital.com"
+
+# make password requirements more for better security practice (cap, lower,num, special char)
+def is_valid_password(password):
+    return(
+        len(password) >= 8 and
+        re.search(r"[A-Z]", password) and
+        re.search(r"[a-z]", password) and
+        re.search(r"[0-9]", password) and
+        re.search(r"[!@#$%^&*(),.?\|<>]", password)
+    )
 
 # handles user registration (creating account)
 class RegisterApi:
@@ -31,6 +43,16 @@ class RegisterApi:
             
             username = form["username"]
             password = form["password"]
+
+            # the check for valid password w/ helper
+            if not is_valid_password(password):
+                resp.status = falcon.HTTP_400
+                resp.media = {
+                    "status": "failure",
+                    "message": "Password must be at least 8 characters and include uppercase, lowercase, number, and special characters"
+                }
+                return
+            
             # default role if user role not provided.
             role = form.get("role", "patient")
 

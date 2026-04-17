@@ -24,12 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const username = loginForm.elements["username"].value;
       const password = loginForm.elements["password"].value;
+
       try {
         const response = await fetch(`${API_BASE_URL}/users/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),
         });
+
         const data = await response.json();
         if (data.status === "success") {
           localStorage.setItem("token", data.bearer);
@@ -58,9 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const username = registerForm.elements["username"].value;
       const password = registerForm.elements["password"].value;
       const role = registerForm.elements["role"].value;
+
       try {
         const response = await fetch(`${API_BASE_URL}/users/register`, {
           method: "POST",
@@ -68,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({ username, password, role }),
         });
         const data = await response.json();
+
         if (data.status === "success") {
           alert("Registration successful! Please log in.");
           window.location.href = "login.html";
@@ -133,12 +138,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function loadAppointments() {
     if (!appointmentsList) return;
+
     try {
       const response = await fetch(`${API_BASE_URL}/appointments`, {
         method: "GET",
         headers: authHeaders(),
       });
       const data = await response.json();
+
       if (data.status !== "success") {
         appointmentsList.innerHTML = "<li>Error loading appointments.</li>";
         return;
@@ -147,6 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
         appointmentsList.innerHTML = "<li>No appointments found.</li>";
         return;
       }
+
       appointmentsList.innerHTML = data.appointments
         .map(
           (appt) => `
@@ -174,6 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const appointment_time =
         appointmentForm.elements["appointment_time"].value;
       const reason = appointmentForm.elements["reason"].value;
+
       try {
         const response = await fetch(`${API_BASE_URL}/appointments`, {
           method: "POST",
