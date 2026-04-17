@@ -3,39 +3,47 @@
   <head>
     <meta charset="UTF-8" />
     <title>Doctor Appointments</title>
-    <link rel="stylesheet" href="../static/dashboard.css" />
+    <link rel="stylesheet" href="../static/dashboard.css?v=2" />
   </head>
+
   <body class="dashboard">
-    <header class="top-banner">
-      <h1>Medical Portal - Doctor Appointments</h1>
-      <div class="user-info">
-        <span>Welcome, Doctor!</span><br />
-        <a href="/logout" class="logout-btn">Logout</a>
-      </div>
-    </header>
+    <div id="dashboard">
+      <header class="top-banner">
+        <h1>Medical Portal - Doctor Appointments</h1>
+        <div class="user-info">
+          <span id="user-info">Welcome, Doctor</span><br />
+          <button id="logout-btn" class="logout-btn">Logout</button>
+        </div>
+      </header>
 
-    <div class="main-layout">
-      <nav class="sidebar">
-        <ul class="nav-links">
-          <li><a href="/doctor_dashboard.html">Dashboard</a></li>
-          <li><a href="/doctor_filetransfer.html">File Transfer & Inbox</a></li>
-          <li><a href="/doctor_pfp.html">Doctor Profile</a></li>
-        </ul>
-      </nav>
+      <div class="main-layout">
+        <nav class="sidebar">
+          <ul class="nav-links">
+            <li><a href="doctor_dash.html">Dashboard</a></li>
+            <li>
+              <a href="doctor_filetransfer.html">File Transfer & Inbox</a>
+            </li>
+            <li><a href="doctor_pfp.html">Doctor Profile</a></li>
+          </ul>
+        </nav>
 
-      <div class="main-content">
-        <section class="upcoming-appointments">
-          <h2>Upcoming Appointments</h2>
+        <div class="main-content">
+          <section class="upcoming-appointments">
+            <h2>Upcoming Appointments</h2>
+            <p>Here are your upcoming appointments with your patients:</p>
 
-          <p>Here are your upcoming appointments with your patients:</p>
-        </section>
+            <div id="appointments-list"></div>
+          </section>
 
-        <div class="bottom-disclaimer">
-          <strong>Disclaimer:</strong> This is a demo application for
-          educational purposes only. It does not store or transmit any real user
-          data and should not be used in a real medical setting.
+          <div class="bottom-disclaimer">
+            <strong>Disclaimer:</strong> This is a demo application for
+            educational purposes only. It does not store or transmit any real
+            user data and should not be used in a real medical setting.
+          </div>
         </div>
       </div>
     </div>
+
+    <script src="../static/app.js"></script>
   </body>
 </html>

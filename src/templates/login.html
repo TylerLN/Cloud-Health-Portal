@@ -12,7 +12,7 @@
         <h1>Medical Health Portal</h1>
         <h3>Enter your login credentials</h3>
 
-        <form action="/login" method="POST" class="login-form">
+        <form id="login-form" class="login-form">
           <input type="text" name="username" placeholder="Username" required />
           <input
             type="password"
@@ -23,6 +23,8 @@
           <button type="submit">Login</button>
         </form>
 
+        <p id="error-message" style="color: red"></p>
+
         <p>Not registered? <a href="register.html">Register here</a></p>
       </div>
 
@@ -32,5 +34,7 @@
         should not be used in a real medical setting.
       </p>
     </div>
+
+    <script src="../static/app.js"></script>
   </body>
 </html>
