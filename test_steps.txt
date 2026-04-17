@@ -1,0 +1,59 @@
+Rn it runs locally, once we get the
+files transfer running in backend, we can add the
+javascript for it, test if it works, then connect
+to aws
+
+
+
+Steps to run locally:
+
+make sure you install from requirements.txt
+
+1. Start postgresql: 
+    sudo systemctl start postgresql
+
+2. Set postgres password: 
+    sudo -u postgres psql
+    ALTER USER postgres PASSWORD 'enteranypwdincludethequotes';
+    \q
+
+3. Create .env in src/ folder and add following:
+    DB_HOST=127.0.0.1
+    DB_PORT=5432
+    DB_USER=postgres
+    DB_PASSWORD=passwordfrompostgresnoquotes
+
+6. Pull up a terminal to start backend  
+    uvicorn src.app:app --host 127.0.0.1 --port 8000 --reload
+
+7. Pull up a new terminal window to start frontend
+    python3 -m http.server 5500
+
+8. Go to browser and type link
+    http://localhost:5500/src/templates/register.html
+
+9. Register doctor first
+    Check whitelist in users.py
+
+10. Register patients
+    Check whitelist
+
+11. Login and check around the webpages.
+
+if you want to register again, reset postgresql
+
+1. sudo -u postgres psql
+
+2.
+\c postgres
+DELETE FROM appointments;
+DELETE FROM doctor_patient;
+DELETE FROM accounts;
+\q
+
+then reregister
+
+
+
+
+
