@@ -119,7 +119,7 @@ body.dashboard {
   background: white;
   padding: 25px;
   border-radius: 12px;
-  width: 400px;
+  width: 700px;
   margin: 30px auto;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -159,6 +159,25 @@ body.dashboard {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+}
+
+/* to organize each appointment */
+.appointment-card {
+  background: #f0f7ff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid #004a99;
+  border: 1px solid #ccc;
+}
+
+.appointment-card p {
+  margin: 5px 0;
+}
+
+#appointments-list {
+  margin-top: 15px;
 }
 
 /* Patient File Transfer Page */

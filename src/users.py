@@ -3,6 +3,15 @@
 import falcon
 from src.middleware import AuthRequired
 
+WHITELIST = {
+    "doctor1@hospital.com" : "doctor",
+    "patient1@hospital.com" : "patient",
+    "patient2@hospital.com" : "patient",
+    "patient3@hospital.com" : "patient"
+}
+
+DEFAULT_DOCTOR_USERNAME = "doctor1@hospital.com"
+
 # handles user registration (creating account)
 class RegisterApi:
     def __init__(self, db):
@@ -11,6 +20,7 @@ class RegisterApi:
     async def on_post(self, req, resp):
         try:
             form = await req.get_media()
+
             if "username" not in form or "password" not in form:
                 resp.status = falcon.HTTP_400
                 resp.media = {
@@ -19,25 +29,50 @@ class RegisterApi:
                 }
                 return
             
-            user = await self.db.create_account(
-                form["username"], 
-                form["password"],
-                form.get("role", "patient"),
-                )
-            if user is None:
-                resp.status = falcon.HTTP_400
+            username = form["username"]
+            password = form["password"]
+            # default role if user role not provided.
+            role = form.get("role", "patient")
+
+            if username not in WHITELIST:
+                resp.status = falcon.HTTP_403
                 resp.media = {
                     "status": "failure",
-                    "message": "account with username already exists",
+                    "message": "Username not allowed to register",
                 }
                 return
             
+            if role != WHITELIST[username]:
+                resp.status = falcon.HTTP_403
+                resp.media = {
+                    "status": "failure",
+                    "message": f"Invalid role for username. Expected role: {WHITELIST[username]}",
+                }
+                return
+            
+            user = await self.db.create_account(username, password, role)
+
+            if user is None:
+                resp.status = falcon.HTTP_500
+                resp.media = {
+                    "status": "failure", "message": "account creation failed"
+                }
+                return
+            
+            if role == "patient":
+                doctor = await self.db.get_user_username(DEFAULT_DOCTOR_USERNAME)
+                if doctor is not None:
+                    await self.db.assign_doctor_to_patient(doctor["id"], user)
+
             resp.status = falcon.HTTP_201
-            resp.media = {"status": "success"}
-        
-        except:
+            resp.media = {
+                "status": "success"}
+            
+        except Exception as e:
+            print(f"Registration error: {e}")
             resp.status = falcon.HTTP_500
-            resp.media = {"status": "failure"}
+            resp.media = {"status": "failure", "message": "internal server error"}
+            
 
 # handles user login and creating token
 class LoginApi:
@@ -72,7 +107,8 @@ class LoginApi:
                     "bearer": self.auth.new_token(login[1]),
                     "role": login[2],
                 }
-        except:
+        except Exception as e:
+            print(f"Login error: {e}")
             resp.status = falcon.HTTP_500
             resp.media = {"status": "failure"}
 
@@ -82,11 +118,20 @@ class UserApi(AuthRequired):
         self.db = db
 
     async def on_get(self, req, resp):
-        resp.status = falcon.HTTP_200
-        resp.media = {
-            "status": "success", 
-            "user": req.context.user
-        }
+        try:
+            resp.status = falcon.HTTP_200
+            resp.media = {
+                "status": "success",
+                "user": {
+                    "id": str(req.context.user["id"]),
+                    "username": req.context.user["username"],
+                    "role": req.context.user["role"],
+                }
+            }
+        except Exception as e:
+            print(f"UserApi error: {e}")
+            resp.status = falcon.HTTP_500
+            resp.media = {"status": "failure", "message": "internal server error"}
 
 # handles fetching doctor info for current logged in user (in case patient has 1+ doctors)
 class DoctorListApi(AuthRequired):

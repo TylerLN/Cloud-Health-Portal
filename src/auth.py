@@ -17,34 +17,35 @@ class auth_giver:
     def new_refresh_token(self, uid):
         if isinstance(uid, UUID):
             uid = str(uid)
-        return pyseto.encode(
+        token = pyseto.encode(
             self.key,
             {"data": {"uid": uid, "token_type": "refresh_token"}},
             serializer=json,
             exp=604800,
-        ).decode()
+        )
+        return token.decode() if isinstance(token, bytes) else token
 
     def new_token(self, uid):
         if isinstance(uid, UUID):
             uid = str(uid)
-        return pyseto.encode(
+        token = pyseto.encode(
             self.key,
             {"data": {"uid": uid, "token_type": "auth_token"}},
             serializer=json,
             exp=3600,
-        ).decode()
+        )
+        return token.decode() if isinstance(token, bytes) else token
 
     def is_authenticated(self, token):
         try:
+            print(f"Token received: {token}")
             decoded = pyseto.decode(self.key, token, deserializer=json)
-            ## checks if token is auth token, if it isnt then invalid for authentication
             if decoded.payload["data"]["token_type"] != "auth_token":
                 return (False, None)
-            ## TODO: check expired
             return (
                 True,
                 UUID(decoded.payload["data"]["uid"]),
             )
-        ## if any errors during decoding, token invalid
-        except (DecryptError, VerifyError, KeyError, ValueError, TypeError):
+        except (DecryptError, VerifyError, KeyError, ValueError, TypeError) as e:
+            print(f"Auth error: {e}")
             return (False, None)

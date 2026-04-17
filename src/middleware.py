@@ -20,9 +20,8 @@ class authMiddle:
 
     async def process_resource(self, req, resp, resource, params):
         if isinstance(resource, AuthRequired):
-            auth_header = req.headers.get("Authorization")            
+            auth_header = req.get_header("Authorization")            
             
-        # check if auth header is present and starts with "Bearer ", if not then unauthenticated
             token = None
             if auth_header and auth_header.startswith("Bearer "):
                 token = auth_header.removeprefix("Bearer ").strip()
@@ -34,13 +33,17 @@ class authMiddle:
                 resp.complete = True
                 return
             
-            user = await self.db.get_user_id(uid)
-            
-            if user is None:
-                resp.status = falcon.HTTP_403
-                resp.media = {"status": "Unauthenticated"}
-                resp.complete = True
-                return
-            
-            req.context.user = dict(user)
-            req.context.user_id = uid
+            try:
+                user = await self.db.get_user_id(uid)
+                
+                if user is None:
+                    resp.status = falcon.HTTP_403
+                    resp.media = {"status": "Unauthenticated"}
+                    resp.complete = True
+                    return
+                
+                req.context.user = dict(user)
+                req.context.user_id = uid
+            except Exception as e:
+                print(f"Middleware error: {e}")
+                raise

@@ -3,7 +3,9 @@
 import falcon
 from src.middleware import AuthRequired
 
-class AppointmentAPI(AuthRequired):
+from datetime import date, time
+
+class AppointmentsAPI(AuthRequired):
     def __init__(self, db):
         self.db = db
 
@@ -26,12 +28,15 @@ class AppointmentAPI(AuthRequired):
                         "appointment_time": str(appointment["appointment_time"]),
                         "reason": appointment["reason"],
                         "status": appointment["status"],
+                        "doctor_name": appointment.get("doctor_name"),
+                        "patient_name": appointment.get("patient_name"),
                     }
                     for appointment in appointments
                 ],
             }
 
-        except Exception:
+        except Exception as e:
+            print(f"Appointment fetch error: {e}")
             resp.status = falcon.HTTP_500
             resp.media = {
                 "status": "failure",
@@ -56,6 +61,10 @@ class AppointmentAPI(AuthRequired):
             appointment_date = data.get("appointment_date")
             appointment_time = data.get("appointment_time")
             reason = data.get("reason", "")
+
+            # change string to data
+            appointment_date = date.fromisoformat(appointment_date)
+            appointment_time = time.fromisoformat(appointment_time)
 
             if not appointment_date or not appointment_time:
                 resp.status = falcon.HTTP_400
@@ -96,7 +105,8 @@ class AppointmentAPI(AuthRequired):
                 },
             }
 
-        except Exception:
+        except Exception as e:
+            print(f"Appointment create error: {e}")
             resp.status = falcon.HTTP_500
             resp.media = {
                 "status": "failure",

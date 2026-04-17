@@ -16,12 +16,12 @@ class db_conn:
         host: str | list[str] = None,
         port: int | list[int] = None,
         username: str = "postgres",
-        passfile: str = "./.pgpass",
+        password: str = None
     ):
         self.host = host
         self.port = port
         self.username = username
-        self.passfile = passfile
+        self.password = password
         self.pool = None
         self.connected = False
 
@@ -37,11 +37,11 @@ class db_conn:
             return
 
         self.pool = await asyncpg.create_pool(
-            dsn="postgres://localhost:5432/postgres?sslmode=verify-ca&sslcert=keys%2Fclient.crt&sslkey=keys%2Fclient.key&sslrootcert=keys%2froot.crt",
             host=self.host,
             port=self.port,
             user=self.username,
-            passfile=self.passfile,
+            password=self.password,
+            database="postgres",
         )
 
         self.connected = True
@@ -204,6 +204,20 @@ class db_conn:
                 """,
             )
         
+    # get all patients for doctor
+    async def get_patients_for_doctor(self, doctor_id):
+        async with self.pool.acquire() as con:
+            return await con.fetch(
+                """
+                    SELECT a.id, a.username, a.role
+                    FROM doctor_patient dpa
+                    JOIN accounts a ON a.id = dpa.patient_id
+                    WHERE dpa.doctor_id = $1
+                    ORDER BY a.username;
+                """,
+                doctor_id,
+            )
+        
     # creates doctor - patient relationship (doc responsible for patient) puts in table
     async def assign_doctor_to_patient(self, doctor_id: uuid.UUID, patient_id: uuid.UUID):
         async with self.pool.acquire() as con:
@@ -269,46 +283,30 @@ class db_conn:
             if role == "patient":
                 return await con.fetch(
                     """
-                        SELECT id, doctor_id, patient_id, appointment_date, appointment_time, reason, status
-                        FROM appointments
-                        WHERE patient_id = $1
-                        ORDER BY appointment_date, appointment_time;
+                        SELECT a.id, a.doctor_id, a.patient_id, 
+                            a.appointment_date, a.appointment_time, 
+                            a.reason, a.status,
+                            d.username as doctor_name
+                        FROM appointments a
+                        JOIN accounts d ON d.id = a.doctor_id
+                        WHERE a.patient_id = $1
+                        ORDER BY a.appointment_date, a.appointment_time;
                     """,
                     user_id,
                 )
             elif role == "doctor":
                 return await con.fetch(
                     """
-                        SELECT id, doctor_id, patient_id, appointment_date, appointment_time, reason, status
-                        FROM appointments
-                        WHERE doctor_id = $1
-                        ORDER BY appointment_date, appointment_time;
+                        SELECT a.id, a.doctor_id, a.patient_id, 
+                            a.appointment_date, a.appointment_time, 
+                            a.reason, a.status,
+                            p.username as patient_name
+                        FROM appointments a
+                        JOIN accounts p ON p.id = a.patient_id
+                        WHERE a.doctor_id = $1
+                        ORDER BY a.appointment_date, a.appointment_time;
                     """,
                     user_id,
                 )
             else:
                 return None
-
-
-async def main():
-    conn = db_conn(
-        host="localhost",
-        port="5432",
-    )
-    await conn.connect()
-
-    account = await conn.create_account("jnellesen@csu.fullerton.edu", "12345", "patient")
-
-    ismatch = await conn.check_password("jnellesen@csu.fullerton.edu", "12345")
-    print(f"is 12345 correct? {'yes' if ismatch and ismatch[0] else 'no'}")
-    ismatch = await conn.check_password("jnellesen@csu.fullerton.edu", "0")
-    print(f"is 0 correct? {'yes' if ismatch and ismatch[0] else 'no'}")
-    ismatch = await conn.check_password("jnellesen@csu.fullerton.edu", "1")
-    print(f"is 1 correct? {'yes' if ismatch and ismatch[0] else 'no'}")
-
-    ismatch = await conn.check_password("jnellesen@csu.fullerton.invalid", "12345")
-    print(f"is 12345 correct with the wrong account? {'yes' if ismatch and ismatch[0] else 'no'}")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
