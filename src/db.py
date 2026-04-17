@@ -310,3 +310,21 @@ class db_conn:
                 )
             else:
                 return None
+
+    # to check if an appointmnet is alr scheduled with the doctor, date, and time, prevent double booking    
+    async def appointment_exists(self, doctor_id, appointment_date, appointment_time):
+        async with self.pool.acquire() as con:
+            return await con.fetchval(
+                """
+                    SELECT EXISTS (
+                        SELECT 1 FROM appointments
+                        WHERE doctor_id = $1
+                        AND appointment_date = $2
+                        AND appointment_time = $3
+                        AND status != 'cancelled'
+                    );
+                """,
+                doctor_id,
+                appointment_date,
+                appointment_time,
+            )

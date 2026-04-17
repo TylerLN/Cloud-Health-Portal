@@ -28,7 +28,7 @@ body.dashboard {
 
 .main-layout {
   display: flex;
-  height: calc(100vh - 60px);
+  min-height: calc(100vh - 60px);
 }
 
 .user-info {
@@ -57,6 +57,10 @@ body.dashboard {
   background-color: #ffffff;
   border-right: 1px solid #ddd;
   padding-top: 20px;
+  position: sticky;
+  top: 60px;
+  height: calc(100vh -60px);
+  overflow-y: auto;
 }
 
 .nav-bar {

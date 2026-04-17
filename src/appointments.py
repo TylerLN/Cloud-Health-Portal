@@ -83,6 +83,21 @@ class AppointmentsAPI(AuthRequired):
                     "message": "no doctor found for patient",
                 }
                 return
+
+            # new check to see if doctor and appointment slot is booked
+            already_exists = await self.db.appointment_exists(
+                doctor["id"],
+                appointment_date,
+                appointment_time,
+            )
+
+            if already_exists:
+                resp.status = falcon.HTTP_409
+                resp.media = {
+                    "status": "failure",
+                    "message": "That time slot is already booked. Please choose a different time.",
+                }
+                return
             
             appointment_id = await self.db.create_appointment(
                 doctor_id = doctor["id"],
