@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 import asyncio
-from pickle import NONE
 import re
-import ssl
-from unittest import result
 import uuid
 
 import asyncpg
@@ -97,21 +94,21 @@ class db_conn:
                     );
                 """)
             
-    async def account_exists(self, user_email: str) -> bool:
-        """
-        checks to see if a username has already been used.
-
-        :param user_email: the username of the account to search for.
-        :return: a bool representing weather or not the account exists.
-        """
-        async with self.pool.acquire() as con:
-            account_exists = await con.fetchval(
-                """
-                    SELECT exists (SELECT 1 FROM accounts WHERE username = $1 LIMIT 1);
-                """,
-                user_email,
-            )
-        return account_exists
+            # table to hold file info
+            await con.execute("""
+                CREATE TABLE
+                IF NOT EXISTS
+                files (
+                    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+                    sender_id uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+                    recipient_id uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+                    filename TEXT NOT NULL,
+                    subject TEXT,
+                    description TEXT,
+                    s3_key TEXT NOT NULL,
+                    uploaded_at TIMESTAMP DEFAULT NOW()
+                );
+            """)
 
     async def create_account(self, user_email: str, user_password: str, role: str):
         """
@@ -230,21 +227,6 @@ class db_conn:
                 doctor_id,
                 patient_id,
             )
-
-    # check if doctor is assigned to patient for RBAC (if patient assigned to doctor, return true)
-    async def doctor_has_patient(self, doctor_id, patient_id) -> bool:
-        async with self.pool.acquire() as con:
-            return await con.fetchval(
-                """
-                    SELECT EXISTS (
-                        SELECT 1
-                        FROM doctor_patient
-                        WHERE doctor_id = $1 AND patient_id = $2
-                    );
-                    """,
-                    doctor_id,
-                    patient_id,
-            )
         
     # get the doctor assigned to this patient for RBAC and frontend stuff
     async def get_doctor_for_patient(self, patient_id):
@@ -341,4 +323,52 @@ class db_conn:
                 """,
                 appointment_id,
                 patient_id,
+            )
+        
+    # DB logic for file transfer feature
+
+    # create and store file info when in s3 bucket
+    async def create_file(self, sender_id, recipient_id, filename, subject, description, s3_key):
+        async with self.pool.acquire() as con:
+            file_id = await con.fetchval(
+                """
+                    INSERT INTO files(sender_id, recipient_id, filename, subject, description, s3_key)
+                    VALUES ($1, $2, $3, $4, $5, $6)
+                    RETURNING id;
+                """,
+                sender_id,
+                recipient_id,
+                filename,
+                subject,
+                description,
+                s3_key,
+            )
+        return file_id
+
+    # get all files for current user for inbox
+    async def get_all_files(self, user_id):
+        async with self.pool.acquire() as con:
+            return await con.fetch(
+                """
+                    SELECT f.id, f.filename, f.subject, f.description, f.s3_key, f.uploaded_at,
+                        s.username as sender_name
+                    FROM files f
+                    JOIN accounts s ON s.id = f.sender_id
+                    WHERE f.recipient_id = $1
+                    ORDER BY f.uploaded_at DESC;
+                """,
+                user_id,
+            )
+
+    # get specific file by id to generate s3 bucket url for download
+    async def get_file(self, file_id, user_id):
+        async with self.pool.acquire() as con:
+            return await con.fetchrow(
+                """
+                    SELECT f.id, f.filename, f.s3_key, f.recipient_id, f.sender_id
+                    FROM files f
+                    WHERE f.id = $1 AND (f.recipient_id = $2 OR f.sender_id = $2);
+                """,
+                file_id,
+                user_id,
             )

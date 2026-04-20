@@ -11,7 +11,7 @@
       <header class="top-banner">
         <h1>Medical Portal - Patient File Transfer & Inbox</h1>
         <div class="user-info">
-          <span>Welcome, Patient </span><br />
+          <span id="user-info">Welcome, Patient</span>
           <button id="logout-btn" class="logout-btn">Logout</button>
         </div>
       </header>
@@ -41,6 +41,11 @@
             </p>
 
             <form id="file-transfer-form" enctype="multipart/form-data">
+              <label for="recipient">Select Recipient:</label>
+              <select id="recipient" name="recipient" required>
+                <option value="">-- Select Recipient --</option>
+              </select>
+
               <label for="file">Select File:</label>
               <input type="file" id="file" name="file" required />
 

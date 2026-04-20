@@ -319,4 +319,178 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
   }
+
+  // javascript for file transfer logic
+
+  const fileList = document.getElementById("file-list");
+  const fileTransferForm = document.getElementById("file-transfer-form");
+  const fileTransferMessage = document.getElementById("file-transfer-message");
+  const patientSelect = document.getElementById("patient");
+  const recipientSelect = document.getElementById("recipient");
+
+  // load inbox files
+  async function loadFiles() {
+    if (!fileList) return;
+    try {
+      const response = await fetch(`${API_BASE_URL}/files`, {
+        method: "GET",
+        headers: authHeaders(),
+      });
+      const data = await response.json();
+
+      if (data.status !== "success" || data.files.length === 0) {
+        fileList.innerHTML = "<p>No files in inbox.</p>";
+        return;
+      }
+
+      fileList.innerHTML = data.files
+        .map(
+          (f) => `
+        <div class="appointment-card">
+          <p><strong>From:</strong> ${f.sender_name}</p>
+          <p><strong>Subject:</strong> ${f.subject || "N/A"}</p>
+          <p><strong>Description:</strong> ${f.description || "N/A"}</p>
+          <p><strong>File:</strong> ${f.filename}</p>
+          <p><strong>Uploaded:</strong> ${new Date(f.uploaded_at).toLocaleString()}</p>
+          <button onclick="downloadFile('${f.file_id}')"
+            style="margin-top:10px; background:#004a99; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">
+            Download
+          </button>
+        </div>
+      `,
+        )
+        .join("");
+    } catch (error) {
+      fileList.innerHTML = "<p>Error loading files.</p>";
+    }
+  }
+
+  // download file via presigned URL
+  window.downloadFile = async function (fileId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/files/${fileId}`, {
+        method: "GET",
+        headers: authHeaders(),
+      });
+      const data = await response.json();
+      if (data.status === "success") {
+        window.open(data.download_url, "_blank");
+      } else {
+        alert(data.message || "Failed to get download link.");
+      }
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      alert("An error occurred. Please try again.");
+    }
+  };
+
+  // patient dropdown list for doctor
+  if (patientSelect) {
+    const token = localStorage.getItem("token");
+    fetch(`${API_BASE_URL}/users/assigned-patients`, {
+      headers: { Authorization: "Bearer " + token },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === "success" && data.patients.length > 0) {
+          data.patients.forEach((p) => {
+            const option = document.createElement("option");
+            option.value = p.id;
+            option.textContent = p.username;
+            patientSelect.appendChild(option);
+          });
+        }
+      });
+  }
+
+  // doctor dropdown list for patient
+  if (recipientSelect) {
+    const token = localStorage.getItem("token");
+    fetch(`${API_BASE_URL}/users/assigned-doctor`, {
+      headers: { Authorization: "Bearer " + token },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === "success" && data.doctor) {
+          const option = document.createElement("option");
+          option.value = data.doctor.id;
+          option.textContent = data.doctor.username;
+          recipientSelect.appendChild(option);
+        }
+      });
+  }
+
+  // file transfer info process
+  if (fileTransferForm) {
+    fileTransferForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const fileInput = document.getElementById("file");
+      const subject = document.getElementById("subject").value;
+      const description = document.getElementById("description").value;
+
+      const recipientId = patientSelect
+        ? patientSelect.value
+        : recipientSelect
+          ? recipientSelect.value
+          : null;
+
+      if (!recipientId) {
+        if (fileTransferMessage) {
+          fileTransferMessage.textContent = "Please select a recipient.";
+          fileTransferMessage.style.color = "red";
+        }
+        return;
+      }
+
+      if (!fileInput.files[0]) {
+        if (fileTransferMessage) {
+          fileTransferMessage.textContent = "Please select a file.";
+          fileTransferMessage.style.color = "red";
+        }
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+      formData.append("subject", subject);
+      formData.append("description", description);
+      formData.append("recipient_id", recipientId);
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/files`, {
+          method: "POST",
+          headers: authHeaders(),
+          body: formData,
+        });
+        const data = await response.json();
+
+        if (data.status === "success") {
+          if (fileTransferMessage) {
+            fileTransferMessage.textContent = "File uploaded successfully!";
+            fileTransferMessage.style.color = "green";
+          }
+          fileTransferForm.reset();
+          loadFiles();
+        } else {
+          if (fileTransferMessage) {
+            fileTransferMessage.textContent =
+              data.message || "Failed to upload file.";
+            fileTransferMessage.style.color = "red";
+          }
+        }
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        if (fileTransferMessage) {
+          fileTransferMessage.textContent =
+            "An error occurred. Please try again.";
+          fileTransferMessage.style.color = "red";
+        }
+      }
+    });
+  }
+
+  if (fileList) {
+    loadFiles();
+  }
 });
