@@ -210,3 +210,6 @@ keys/
 .env
 .pgpass
 *.cil
+
+# tfvars
+terraform.tfvars
