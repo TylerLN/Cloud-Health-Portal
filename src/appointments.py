@@ -2,6 +2,7 @@
 
 import falcon
 from src.middleware import AuthRequired
+import uuid
 
 from datetime import date, time
 
@@ -127,3 +128,54 @@ class AppointmentsAPI(AuthRequired):
                 "status": "failure",
                 "message": "an error occurred while creating appointment",
             }
+    # ondelete method for cancling appoitnments
+    async def on_delete(self, req, resp):
+        try:
+            user_id = req.context.user_id
+            role = req.context.user["role"]
+
+            if role != "patient":
+                resp.status = falcon.HTTP_403
+                resp.media = {
+                    "status": "failure",
+                    "message": "Only patients can cancel appointments",
+                }
+                return
+            
+            data = await req.get_media()
+            appointment_id = data.get("appointment_id")
+
+            if not appointment_id:
+                resp.status = falcon.HTTP_400
+                resp.media = {
+                    "status": "failure",
+                    "message": "Appointment_id required",
+                }
+                return
+            
+            result = await self.db.cancel_appointment(
+                uuid.UUID(appointment_id),
+                user_id,
+            )
+
+            if not result:
+                resp.status = falcon.HTTP_404
+                resp.media = {
+                    "status": "failure",
+                    "message": "No appointment found.",
+                }
+                return
+            
+            resp.status = falcon.HTTP_200
+            resp.media = {
+                    "status": "success",
+                    "message": "Appointment sucessfully cancelled",
+                }
+            
+        except Exception as e:
+            print(f"Appointment cancel error: {e}")
+            resp.status = falcon.HTTP_500
+            resp.media = {
+                    "status": "success",
+                    "message": "Error has occurred during cancellation process.",
+                }

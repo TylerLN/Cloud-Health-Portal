@@ -328,3 +328,17 @@ class db_conn:
                 appointment_date,
                 appointment_time,
             )
+        
+    # cancel appointment option for patients, remove the scheduled appoitnment in table
+    async def cancel_appointment(self, appointment_id, patient_id):
+        async with self.pool.acquire() as con:
+            return await con.fetchval(
+                """
+                    UPDATE appointments
+                    SET status = 'cancelled'
+                    WHERE id = $1 AND patient_id = $2
+                    RETURNING id;
+                """,
+                appointment_id,
+                patient_id,
+            )

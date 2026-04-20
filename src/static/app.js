@@ -154,6 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
         appointmentsList.innerHTML = "<li>No appointments found.</li>";
         return;
       }
+      const role = localStorage.getItem("role");
 
       appointmentsList.innerHTML = data.appointments
         .map(
@@ -164,6 +165,15 @@ document.addEventListener("DOMContentLoaded", () => {
         <p><strong>With:</strong> ${appt.doctor_name || appt.patient_name || "N/A"}</p>
         <p><strong>Reason:</strong> ${appt.reason || "N/A"}</p>
         <p><strong>Status:</strong> ${appt.status}</p>
+        ${
+          role === "patient" && appt.status !== "cancelled"
+            ? `
+            <button onclick="cancelAppointment('${appt.appointment_id}')" 
+              style="margin-top:10px; background:#dc3545; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">
+              Cancel Appointment
+            </button>`
+            : ""
+        }
       </div>
     `,
         )
@@ -215,6 +225,32 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  // visuals to cancel appointment
+  window.cancelAppointment = async function (appointmentId) {
+    if (!confirm("Are you sure you want to cancel this appointment?")) return;
+    try {
+      const response = await fetch(`${API_BASE_URL}/appointments`, {
+        method: "DELETE",
+        headers: authHeaders(true),
+        body: JSON.stringify({ appointment_id: appointmentId }),
+      });
+      const data = await response.json();
+      if (data.status === "success") {
+        // find the button that was clicked and remove its parent card
+        const button = document.querySelector(
+          `button[onclick="cancelAppointment('${appointmentId}')"]`,
+        );
+        if (button) {
+          button.closest(".appointment-card").remove();
+        }
+      } else {
+        alert(data.message || "Failed to cancel appointment.");
+      }
+    } catch (error) {
+      console.error("Error cancelling appointment:", error);
+      alert("An error occurred. Please try again.");
+    }
+  };
 
   if (appointmentsList) {
     loadAppointments();
