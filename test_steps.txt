@@ -49,6 +49,7 @@ if you want to register again, reset postgresql
 DELETE FROM appointments;
 DELETE FROM doctor_patient;
 DELETE FROM accounts;
+DELETE FROM files;
 \q
 
 then reregister
