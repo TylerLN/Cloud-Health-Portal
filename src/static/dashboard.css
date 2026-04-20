@@ -118,6 +118,15 @@ body.dashboard {
   padding: 20px;
 }
 
+.stat-box {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 300px;
+  margin-top: 10px;
+  border-left: 5px solid #638eb1;
+}
+
 /* Patient Appointments Page - Schedule */
 .upcoming-appointments {
   background: white;

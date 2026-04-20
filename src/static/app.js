@@ -118,6 +118,41 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch((error) => {
           console.error("Error fetching user:", error);
         });
+
+      // get appointment count for dash
+      const appointmentCount = document.getElementById("appointment-count");
+      if (appointmentCount) {
+        fetch(`${API_BASE_URL}/appointments`, {
+          headers: { Authorization: "Bearer " + token },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status === "success") {
+              const active = data.appointments.filter(
+                (a) => a.status !== "cancelled",
+              ).length;
+              appointmentCount.textContent = active;
+            } else {
+              appointmentCount.textContent = "0";
+            }
+          });
+      }
+
+      // get file inbox count for dash
+      const fileCount = document.getElementById("file-count");
+      if (fileCount) {
+        fetch(`${API_BASE_URL}/files`, {
+          headers: { Authorization: "Bearer " + token },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status === "success") {
+              fileCount.textContent = data.files.length;
+            } else {
+              fileCount.textContent = "0";
+            }
+          });
+      }
     }
   }
 
@@ -298,6 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         if (data.status === "success") {
           profileName.textContent = data.user.username;
+          if (profileRole) profileRole.textContent = data.user.role;
         }
       });
 
