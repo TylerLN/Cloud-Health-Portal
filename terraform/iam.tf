@@ -28,8 +28,9 @@ resource "aws_iam_policy" "s3_access_policy" {
   name        = "s3-access-policy"
   description = "Allow EC2 backend to securely access S3 bucket"
 
-  // (1) lists the bucket itself, required for accessing objects
-  // (2) allows access to objects within the bucket
+  // list buck lists files in uploads/ nothing else
+  // object acecss only for uploaded files in upload folder
+  // extra deny condition to prevent deletion
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -39,7 +40,12 @@ resource "aws_iam_policy" "s3_access_policy" {
         Action = [
           "s3:ListBucket"
         ]
-        Resource = aws_s3_bucket.file_transfers.arn
+        Resource = aws_s3_bucket.file_transfers.arn 
+        Condition = {
+          StringLike = {
+            "s3:prefix" = ["uploads/*"]
+          }
+        }
       },
       {
         Sid    = "ObjectAccess"
@@ -48,7 +54,19 @@ resource "aws_iam_policy" "s3_access_policy" {
           "s3:GetObject",
           "s3:PutObject"
         ]
-        Resource = "${aws_s3_bucket.file_transfers.arn}/*"
+        Resource = "${aws_s3_bucket.file_transfers.arn}/uploads/*"
+      },
+      {
+        Sid    = "DenyDelete"
+        Effect = "Deny"
+        Action = [
+          "s3:DeleteObject",
+          "s3:DeleteBucket"
+        ]
+        Resource = [
+          aws_s3_bucket.file_transfers.arn,
+          "${aws_s3_bucket.file_transfers.arn}/*"
+        ]
       }
     ]
   })
