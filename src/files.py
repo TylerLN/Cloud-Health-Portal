@@ -76,7 +76,6 @@ class FilesAPI(AuthRequired):
                 }
                 return
 
-            # if role is patient, send file to doctor,
             if role == "patient":
                 doctor = await self.db.get_doctor_for_patient(user_id)
                 if not doctor:
@@ -97,7 +96,7 @@ class FilesAPI(AuthRequired):
                     return
                 recipient_id = uuid.UUID(recipient_id)
 
-            # uupload to s3 in /uploads folder
+            # uupload to s3 in /uploads folder for least priveilege principle
             s3_key = f"uploads/{user_id}/{recipient_id}/{filename}"
 
             session = aioboto3.Session()
@@ -137,7 +136,6 @@ class FileDownloadAPI(AuthRequired):
     def __init__(self, db):
         self.db = db
 
-    # generate presigned URL for file download
     async def on_get(self, req, resp, file_id):
         try:
             user_id = req.context.user_id
@@ -152,7 +150,7 @@ class FileDownloadAPI(AuthRequired):
                 }
                 return
 
-            # create a presigned url for user to download, expiration time of 1 hr
+            # create a presigned url for user to download, expires in 1 hour, can change 
             session = aioboto3.Session()
             async with session.client("s3", region_name=AWS_REGION) as s3:
                 url = await s3.generate_presigned_url(

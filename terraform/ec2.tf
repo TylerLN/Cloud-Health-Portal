@@ -14,6 +14,7 @@ resource "aws_instance" "app_server" {
   }
   
   // Install and configure CloudWatch agent on EC2 instances to monitor memory, disk, and logs
+  // also run the uvicorn python by clonign our repository and running it automattically within ec2
   user_data = <<-EOF
               #!/bin/bash
               set -eux

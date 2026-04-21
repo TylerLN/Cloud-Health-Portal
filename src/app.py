@@ -24,7 +24,7 @@ class HealthStatusApi:
 # Cross origin resource sharing default blocks requests from one origin to another, so we allow it for frontend and backend, might get rid when terraform connection
 class CORSMiddleware:
     async def process_request(self, req, resp):
-        resp.set_header('Access-Control-Allow-Origin', 'http://localhost:5500')
+        resp.set_header('Access-Control-Allow-Origin', '*')
         resp.set_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
         resp.set_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import asyncio
 import re
 import uuid
 
@@ -59,16 +58,7 @@ class db_conn:
                         role TEXT NOT NULL CHECK (role IN ('patient', 'doctor'))
                     );
                 """)
-            await con.execute("""
-                    CREATE TABLE
-                    IF NOT EXISTS
-                    personal_info (
-                        account_id uuid NOT NULL REFERENCES accounts(id),
-                        first_name VARCHAR (255) NOT NULL,
-                        middle_name VARCHAR (255),
-                        last_name VARCHAR (255)
-                    );
-                """)
+      
             ## table for doctor-patient relationship
             await con.execute("""
                     CREATE TABLE
