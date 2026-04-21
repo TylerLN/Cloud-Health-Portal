@@ -39,7 +39,7 @@ data = db.db_conn(
     password=os.getenv("DB_PASSWORD"),
 )
 
-key = b"FunyKEy"
+key = os.getenv("SECRET_KEY").encode()
 tokens = auth.auth_giver(key=key)
 
 app = falcon.asgi.App(

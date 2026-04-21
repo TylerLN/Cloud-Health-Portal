@@ -7,6 +7,7 @@ resource "aws_instance" "app_server" {
   subnet_id              = aws_subnet.private_app.id
   vpc_security_group_ids = [aws_security_group.app_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.app_instance_profile.name
+  user_data_replace_on_change = true
 
   root_block_device {
     encrypted = true
@@ -65,6 +66,53 @@ resource "aws_instance" "app_server" {
                 -m ec2 \
                 -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
                 -s
+
+              apt-get install -y python3 python3-pip git nginx
+
+              pip3 install falcon uvicorn asyncpg pyseto aioboto3 python-dotenv
+
+              git clone -b appointments https://${var.github_token}@github.com/454-Project-Group/Backend /app
+              
+              chmod -R 755 /app 
+              chown -R www-data:www-data /app
+
+              cat > /app/src/.env <<ENVFILE
+              DB_HOST=${aws_db_instance.app_db.address}
+              DB_PORT=5432
+              DB_USER=${var.rds_username}
+              DB_PASSWORD=${var.rds_password}
+              SECRET_KEY=${var.secret_key}
+              ENVFILE
+
+              cat > /etc/nginx/sites-available/default <<'NGINXCONFIG'
+              server {
+                listen 80;
+
+                root /app/src/templates;
+                index login.html;
+
+                location /api/ {
+                  proxy_pass http://127.0.0.1:8000;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                }
+
+                location /static/ {
+                  alias /app/src/static/;
+                }
+
+                location / {
+                  try_files $uri $uri/ /login.html;
+                }
+              }
+              NGINXCONFIG
+
+              nginx -t && systemctl restart nginx
+
+
+              cd /app
+              nohup uvicorn src.app:app --host 127.0.0.1 --port 8000 &
+
               EOF
 
 
@@ -79,7 +127,7 @@ data "aws_ami" "ubuntu" {
   most_recent = true
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
   }
 
   filter {

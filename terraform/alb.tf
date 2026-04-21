@@ -26,7 +26,7 @@ resource "aws_lb_target_group" "app_tg" {
   vpc_id   = aws_vpc.main.id
   // check if app servers are healthy before sending traffic
   health_check {
-    path                = "/"
+    path                = "/api/v1"
     protocol            = "HTTP"
     matcher             = "200-399"
     interval            = 30
@@ -50,4 +50,12 @@ resource "aws_lb_listener" "app_listener" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.app_tg.arn
   }
+}
+
+// Register EC2 instances with the target group
+resource "aws_lb_target_group_attachment" "app_tg_attachment" {
+  count            = 2
+  target_group_arn = aws_lb_target_group.app_tg.arn
+  target_id        = aws_instance.app_server[count.index].id
+  port             = 80
 }

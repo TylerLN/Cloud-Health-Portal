@@ -11,3 +11,15 @@ variable "rds_username" {
   type        = string
   sensitive   = true
 }
+
+variable "secret_key" { 
+  description = "secret key for PASETO token"
+  type        = string
+  sensitive   = true
+}
+
+variable "github_token" {
+  description = "github personal access token"
+  type        = string
+  sensitive   = true
+}

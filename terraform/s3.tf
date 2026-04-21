@@ -1,7 +1,7 @@
 // S3 bucket for file transfers
 
 resource "aws_s3_bucket" "file_transfers" {
-  bucket = "file-transfers-bucket-cpsc-454"
+  bucket = "files-transfers-bucket-cpsc-454"
 
   tags = {
     Name = "File Transfers Bucket"
