@@ -2,9 +2,9 @@
 
 // Creates VPC w/ 3 subnets
 resource "aws_vpc" "main" {
-  cidr_block            = "10.0.0.0/16"
-  enable_dns_hostnames  = true
-  enable_dns_support    = true
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
   tags = {
     Name = "main-vpc"
   }
@@ -121,4 +121,3 @@ resource "aws_route_table_association" "private_app_assoc" {
   subnet_id      = aws_subnet.private_app.id
   route_table_id = aws_route_table.private_rt.id
 }
-

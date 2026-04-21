@@ -12,7 +12,7 @@ variable "rds_username" {
   sensitive   = true
 }
 
-variable "secret_key" { 
+variable "secret_key" {
   description = "secret key for PASETO token"
   type        = string
   sensitive   = true

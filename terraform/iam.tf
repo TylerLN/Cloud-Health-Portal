@@ -35,12 +35,12 @@ resource "aws_iam_policy" "s3_access_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Sid    = "ListBucket" 
+        Sid    = "ListBucket"
         Effect = "Allow"
         Action = [
           "s3:ListBucket"
         ]
-        Resource = aws_s3_bucket.file_transfers.arn 
+        Resource = aws_s3_bucket.file_transfers.arn
         Condition = {
           StringLike = {
             "s3:prefix" = ["uploads/*"]

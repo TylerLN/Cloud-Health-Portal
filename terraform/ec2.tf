@@ -1,18 +1,18 @@
 // EC2 instance configuration for app servers
 
 resource "aws_instance" "app_server" {
-  count                  = 2
-  ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t3.micro"
-  subnet_id              = aws_subnet.private_app.id
-  vpc_security_group_ids = [aws_security_group.app_sg.id]
-  iam_instance_profile   = aws_iam_instance_profile.app_instance_profile.name
+  count                       = 2
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t3.micro"
+  subnet_id                   = aws_subnet.private_app.id
+  vpc_security_group_ids      = [aws_security_group.app_sg.id]
+  iam_instance_profile        = aws_iam_instance_profile.app_instance_profile.name
   user_data_replace_on_change = true
 
   root_block_device {
     encrypted = true
   }
-  
+
   // Install and configure CloudWatch agent on EC2 instances to monitor memory, disk, and logs
   // also run the uvicorn python by clonign our repository and running it automattically within ec2
   user_data = <<-EOF
