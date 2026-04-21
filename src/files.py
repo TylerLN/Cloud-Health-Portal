@@ -107,7 +107,6 @@ class FilesAPI(AuthRequired):
                     Body=file_data,
                 )
 
-            # create the file and store it
             file_id = await self.db.create_file(
                 sender_id=user_id,
                 recipient_id=recipient_id,

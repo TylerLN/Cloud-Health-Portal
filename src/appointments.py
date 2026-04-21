@@ -176,6 +176,6 @@ class AppointmentsAPI(AuthRequired):
             print(f"Appointment cancel error: {e}")
             resp.status = falcon.HTTP_500
             resp.media = {
-                    "status": "success",
+                    "status": "failure",
                     "message": "Error has occurred during cancellation process.",
                 }

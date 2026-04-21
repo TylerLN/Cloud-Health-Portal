@@ -9,7 +9,6 @@ class dbMiddle:
         self.db = db
 
     async def process_resource(self, req, resp, resource, params):
-        # got rid of task group and just check if db connected, if not wait for it to
         if not self.db.connected:
             await self.db.connect()
 

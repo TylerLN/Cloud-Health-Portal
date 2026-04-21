@@ -3,17 +3,14 @@ import os
 
 load_dotenv()
 
-import aioboto3
 import falcon
 import falcon.asgi
-
-import pyseto
 
 import src.auth as auth
 import src.db as db
 import src.users as users
 import src.appointments as appointments
-from src.middleware import AuthRequired, authMiddle, dbMiddle
+from src.middleware import authMiddle, dbMiddle
 import src.files as files
 
 class HealthStatusApi:
