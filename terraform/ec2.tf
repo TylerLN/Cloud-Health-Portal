@@ -70,9 +70,9 @@ resource "aws_instance" "app_server" {
 
               apt-get install -y python3 python3-pip git nginx
 
-              pip3 install falcon uvicorn asyncpg pyseto aioboto3 python-dotenv
-
               git clone -b appointments https://${var.github_token}@github.com/454-Project-Group/Backend /app
+
+              pip3 install -r /app/requirements.txt
               
               chmod -R 755 /app 
               chown -R www-data:www-data /app

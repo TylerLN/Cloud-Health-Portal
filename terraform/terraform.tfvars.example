@@ -1,0 +1,7 @@
+# copy to terraform.tfvars and fill 
+# github token is a personal access token to access if repository is private
+
+rds_username = "postgres"
+rds_password = "yourpassword"
+secret_key   = "secretkeyvalue"
+github_token = "ghptoken"

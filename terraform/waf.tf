@@ -55,7 +55,7 @@ resource "aws_wafv2_web_acl" "app_waf" {
     }
   }
 
-  // rate limiting (rn 500 request limit but can change to whatever)
+  // rate limiting (rn 100 request limit but can change to whatever)
   rule {
     name     = "RateLimitRule"
     priority = 3
@@ -66,7 +66,7 @@ resource "aws_wafv2_web_acl" "app_waf" {
 
     statement {
       rate_based_statement {
-        limit              = 500
+        limit              = 100
         aggregate_key_type = "IP"
       }
     }
