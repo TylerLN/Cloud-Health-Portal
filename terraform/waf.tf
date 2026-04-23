@@ -11,26 +11,37 @@ resource "aws_wafv2_web_acl" "app_waf" {
   // common threats prevention
   // log to cloudwatch
   rule {
-    name     = "AWSManagedRulesCommonRuleSet"
-    priority = 1
+  name     = "AWSManagedRulesCommonRuleSet"
+  priority = 1
+  override_action {
+    none {}
+  }
+  statement {
+    managed_rule_group_statement {
+      name        = "AWSManagedRulesCommonRuleSet"
+      vendor_name = "AWS"
 
-    override_action {
-      none {}
-    }
+      rule_action_override {
+        name = "SizeRestrictions_BODY"
+        action_to_use {
+          allow {}
+        }
+      }
 
-    statement {
-      managed_rule_group_statement {
-        name        = "AWSManagedRulesCommonRuleSet"
-        vendor_name = "AWS"
+      rule_action_override {
+        name = "CrossSiteScripting_BODY"
+        action_to_use {
+          allow {}
+        }
       }
     }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "AWSManagedRulesCommonRuleSetMetric"
-      sampled_requests_enabled   = true
-    }
   }
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "AWSManagedRulesCommonRuleSetMetric"
+    sampled_requests_enabled   = true
+  }
+}
 
   // sql injection prevention
   rule {
