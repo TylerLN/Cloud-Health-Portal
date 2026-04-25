@@ -58,11 +58,13 @@ doctor_list_api = users.DoctorListApi(data)
 fetch_doctor_api = users.FetchDoctorsAPI(data)
 fetch_patient_api = users.FetchPatientsAPI(data)
 assign_doctor_api = users.AssignDoctorAPI(data)
+change_password_api = users.ChangePasswordAPI(data)
 
 appointments_api = appointments.AppointmentsAPI(data)
 
 files_api = files.FilesAPI(data)
 file_download_api = files.FileDownloadAPI(data)
+
 
 # routes
 app.add_route("/api/v1", a)
@@ -74,6 +76,7 @@ app.add_route("/api/v1/users/doctors", doctor_list_api)
 app.add_route("/api/v1/users/assigned-doctor", fetch_doctor_api)
 app.add_route("/api/v1/users/assigned-patients", fetch_patient_api)
 app.add_route("/api/v1/users/assign", assign_doctor_api)
+app.add_route("/api/v1/users/change-password", change_password_api)
 
 app.add_route("/api/v1/appointments", appointments_api)
 

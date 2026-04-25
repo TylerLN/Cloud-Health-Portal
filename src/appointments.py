@@ -128,20 +128,12 @@ class AppointmentsAPI(AuthRequired):
                 "status": "failure",
                 "message": "an error occurred while creating appointment",
             }
-    # ondelete method for cancling appoitnments
+    # ondelete method for canceling (patient) or completing (doctor) appointments
     async def on_delete(self, req, resp):
         try:
             user_id = req.context.user_id
             role = req.context.user["role"]
 
-            if role != "patient":
-                resp.status = falcon.HTTP_403
-                resp.media = {
-                    "status": "failure",
-                    "message": "Only patients can cancel appointments",
-                }
-                return
-            
             data = await req.get_media()
             appointment_id = data.get("appointment_id")
 
@@ -149,33 +141,50 @@ class AppointmentsAPI(AuthRequired):
                 resp.status = falcon.HTTP_400
                 resp.media = {
                     "status": "failure",
-                    "message": "Appointment_id required",
+                    "message": "appointment_id required",
                 }
                 return
-            
-            result = await self.db.cancel_appointment(
-                uuid.UUID(appointment_id),
-                user_id,
-            )
+
+            if role == "patient":
+                result = await self.db.cancel_appointment(
+                    uuid.UUID(appointment_id),
+                    user_id,
+                )
+                message = "Appointment successfully cancelled"
+
+            elif role == "doctor":
+                result = await self.db.complete_appointment(
+                    uuid.UUID(appointment_id),
+                    user_id,
+                )
+                message = "Appointment marked as completed"
+
+            else:
+                resp.status = falcon.HTTP_403
+                resp.media = {
+                    "status": "failure",
+                    "message": "Unauthorized",
+                }
+                return
 
             if not result:
                 resp.status = falcon.HTTP_404
                 resp.media = {
                     "status": "failure",
-                    "message": "No appointment found.",
+                    "message": "Appointment not found.",
                 }
                 return
-            
+
             resp.status = falcon.HTTP_200
             resp.media = {
-                    "status": "success",
-                    "message": "Appointment sucessfully cancelled",
-                }
-            
+                "status": "success",
+                "message": message,
+            }
+
         except Exception as e:
-            print(f"Appointment cancel error: {e}")
+            print(f"Appointment error: {e}")
             resp.status = falcon.HTTP_500
             resp.media = {
-                    "status": "failure",
-                    "message": "Error has occurred during cancellation process.",
-                }
+                "status": "failure",
+                "message": "Error occurred.",
+            }

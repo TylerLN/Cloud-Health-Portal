@@ -26,51 +26,53 @@
         </nav>
 
         <div class="main-content">
-          <section class="file-inbox">
-            <h2>Inbox</h2>
-            <div id="file-list">
-              <p>Loading files.</p>
-            </div>
-          </section>
+          <div class="file-section">
+            <section class="file-inbox">
+              <h2>Inbox</h2>
+              <div id="file-list">
+                <p>Loading files.</p>
+              </div>
+            </section>
 
-          <section class="file-transfer">
-            <h2>File Transfer</h2>
-            <p>
-              Use the form below to transfer files securely between you and your
-              healthcare provider.
-            </p>
+            <section class="file-transfer">
+              <h2>File Transfer</h2>
+              <p>
+                Use the form below to transfer files securely between you and
+                your healthcare provider.
+              </p>
 
-            <form id="file-transfer-form" enctype="multipart/form-data">
-              <label for="patient">Select Patient:</label>
-              <select id="patient" name="patient" required>
-                <option value="">-- Select Patient --</option>
-              </select>
+              <form id="file-transfer-form" enctype="multipart/form-data">
+                <label for="patient">Select Patient:</label>
+                <select id="patient" name="patient" required>
+                  <option value="">-- Select Patient --</option>
+                </select>
 
-              <label for="file">Select File:</label>
-              <input type="file" id="file" name="file" required />
+                <label for="file">Select File:</label>
+                <input type="file" id="file" name="file" required />
 
-              <label for="subject">Subject:</label>
-              <input
-                type="text"
-                id="subject"
-                name="subject"
-                placeholder="Enter subject"
-                required
-              />
+                <label for="subject">Subject:</label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  placeholder="Enter subject"
+                  required
+                />
 
-              <label for="description">Description:</label>
-              <textarea
-                id="description"
-                name="description"
-                placeholder="Enter description about the file."
-                rows="3"
-              ></textarea>
+                <label for="description">Description:</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  placeholder="Enter description about the file."
+                  rows="3"
+                ></textarea>
 
-              <button type="submit">Send to Patient</button>
-            </form>
+                <button type="submit">Send to Patient</button>
+              </form>
 
-            <p id="file-transfer-message"></p>
-          </section>
+              <p id="file-transfer-message"></p>
+            </section>
+          </div>
 
           <div class="bottom-disclaimer">
             <strong>Disclaimer:</strong> This is a demo application for

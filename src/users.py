@@ -264,3 +264,74 @@ class AssignDoctorAPI(AuthRequired):
             "status": "success",
             "message": f"Patient {patient_id} assigned to doctor {req.context.user_id}",
         }
+
+# API for changing user password & confirming
+class ChangePasswordAPI(AuthRequired):
+    def __init__(self, db):
+        self.db = db
+
+    async def on_post(self, req, resp):
+        try:
+            user_id = req.context.user_id
+            data = await req.get_media()
+
+            username = data.get("username")
+            current_password = data.get("current_password")
+            new_password = data.get("new_password")
+            confirm_password = data.get("confirm_password")
+
+            if not username or not current_password or not new_password or not confirm_password:
+                resp.status = falcon.HTTP_400
+                resp.media = {
+                    "status": "failure",
+                    "message": "All fields are required",
+                }
+                return
+
+            if new_password != confirm_password:
+                resp.status = falcon.HTTP_400
+                resp.media = {
+                    "status": "failure",
+                    "message": "New passwords do not match",
+                }
+                return
+
+            if not is_valid_password(new_password):
+                resp.status = falcon.HTTP_400
+                resp.media = {
+                    "status": "failure",
+                    "message": "Password must be at least 8 characters with uppercase, lowercase, number, and special character",
+                }
+                return
+
+            login = await self.db.check_password(username, current_password)
+            if not login or not login[0]:
+                resp.status = falcon.HTTP_401
+                resp.media = {
+                    "status": "failure",
+                    "message": "Current password is incorrect",
+                }
+                return
+
+            result = await self.db.update_password(username, new_password)
+            if not result:
+                resp.status = falcon.HTTP_404
+                resp.media = {
+                    "status": "failure",
+                    "message": "User not found",
+                }
+                return
+
+            resp.status = falcon.HTTP_200
+            resp.media = {
+                "status": "success",
+                "message": "Password updated successfully",
+            }
+
+        except Exception as e:
+            print(f"Change password error: {e}")
+            resp.status = falcon.HTTP_500
+            resp.media = {
+                "status": "failure",
+                "message": "An error occurred while changing password",
+            }

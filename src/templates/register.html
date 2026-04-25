@@ -8,6 +8,42 @@
 
   <body>
     <div class="main-container">
+      <div class="whitelist-panel">
+        <h3>Whitelisted Users</h3>
+        <p style="font-size: 0.85rem; color: #161616; margin-bottom: 15px">
+          Utilize the following accounts to register for demonstration purposes:
+        </p>
+        <table class="whitelist-table">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>doctor1@hospital.com</td>
+              <td><span class="role-badge doctor">Doctor</span></td>
+            </tr>
+            <tr>
+              <td>patient1@hospital.com</td>
+              <td><span class="role-badge patient">Patient</span></td>
+            </tr>
+            <tr>
+              <td>patient2@hospital.com</td>
+              <td><span class="role-badge patient">Patient</span></td>
+            </tr>
+            <tr>
+              <td>patient3@hospital.com</td>
+              <td><span class="role-badge patient">Patient</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size: 0.75rem; color: #888; margin-top: 15px">
+          Note: Register the doctor account first before registering patients.
+        </p>
+      </div>
+
       <div class="login">
         <h1>Medical Health Portal</h1>
         <img
@@ -19,24 +55,43 @@
 
         <form id="register-form" class="login-form">
           <input type="text" name="username" placeholder="Username" required />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required
-          />
+
+          <div style="position: relative; width: 100%">
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Password"
+              required
+              style="width: 100%; padding-right: 40px; box-sizing: border-box"
+            />
+            <button type="button" id="toggle-password" class="toggle-btn">
+              Show
+            </button>
+          </div>
 
           <small style="color: #888"
             >Password must be at least 8 charcs with uppercase, lowercase,
             number, and special chars.</small
           >
 
-          <input
-            type="password"
-            name="confirm_password"
-            placeholder="Confirm Password"
-            required
-          />
+          <div style="position: relative; width: 100%">
+            <input
+              type="password"
+              name="confirm_password"
+              id="confirm-password"
+              placeholder="Confirm Password"
+              required
+              style="width: 100%; padding-right: 40px; box-sizing: border-box"
+            />
+            <button
+              type="button"
+              id="toggle-confirm-password"
+              class="toggle-btn"
+            >
+              Show
+            </button>
+          </div>
 
           <select name="role" required>
             <option value="" disabled selected>Select role</option>
@@ -50,14 +105,14 @@
         <p id="error-message" style="color: red"></p>
 
         <p>Already have an account? <a href="login.html">Login here</a></p>
-
-        <div class="bottom-disclaimer">
-          <strong>Disclaimer:</strong> This is a demo application for
-          educational purposes only. It does not store or transmit any real user
-          data and should not be used in a real medical setting.
-        </div>
       </div>
     </div>
+
+    <p class="disclaimer">
+      <strong>Disclaimer:</strong> This is a demo application for educational
+      purposes only. It does not store or transmit any real user data and should
+      not be used in a real medical setting.
+    </p>
 
     <script src="../static/app.js"></script>
   </body>

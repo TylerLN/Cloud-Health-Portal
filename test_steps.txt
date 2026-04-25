@@ -1,9 +1,5 @@
-Rn it runs locally, once we get the
-files transfer running in backend, we can add the
-javascript for it, test if it works, then connect
-to aws
-
-
+These are the steps to run the application locally for development purposes.
+Ideally, the applicaiton prototype should be deployed within the cloud environment writen with IAC.
 
 Steps to run locally:
 
@@ -53,8 +49,3 @@ DELETE FROM files;
 \q
 
 then reregister
-
-
-
-
-

@@ -1,8 +1,11 @@
 // javascript logic for app
 
 document.addEventListener("DOMContentLoaded", () => {
-  const API_BASE_URL = window.location.origin + "/api/v1";
-
+  // determine base on env (local or cloud)
+  const API_BASE_URL =
+    window.location.port === "5500"
+      ? "http://127.0.0.1:8000/api/v1"
+      : window.location.origin + "/api/v1";
   const errorMessage = document.getElementById("error-message");
 
   function authHeaders(json = false) {
@@ -15,6 +18,86 @@ document.addEventListener("DOMContentLoaded", () => {
       headers["Content-Type"] = "application/json";
     }
     return headers;
+  }
+
+  // Change Password form
+  // toggle password fields on profile page
+  window.toggleCp = function (inputId, buttonId) {
+    const input = document.getElementById(inputId);
+    const button = document.getElementById(buttonId);
+    if (input.type === "password") {
+      input.type = "text";
+      button.textContent = "Hide";
+    } else {
+      input.type = "password";
+      button.textContent = "Show";
+    }
+  };
+
+  const toggleConfirmPassword = document.getElementById(
+    "toggle-confirm-password",
+  );
+  if (toggleConfirmPassword) {
+    toggleConfirmPassword.addEventListener("click", () => {
+      const confirmInput = document.getElementById("confirm-password");
+      if (confirmInput.type === "password") {
+        confirmInput.type = "text";
+        toggleConfirmPassword.textContent = "Hide";
+      } else {
+        confirmInput.type = "password";
+        toggleConfirmPassword.textContent = "Show";
+      }
+    });
+  }
+
+  // change password form
+  const changePasswordForm = document.getElementById("change-password-form");
+  const changePasswordMessage = document.getElementById(
+    "change-password-message",
+  );
+
+  if (changePasswordForm) {
+    changePasswordForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("cp-username").value;
+      const current_password = document.getElementById("cp-current").value;
+      const new_password = document.getElementById("cp-new").value;
+      const confirm_password = document.getElementById("cp-confirm").value;
+
+      if (new_password !== confirm_password) {
+        changePasswordMessage.textContent = "New passwords do not match.";
+        changePasswordMessage.style.color = "red";
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/users/change-password`, {
+          method: "POST",
+          headers: authHeaders(true),
+          body: JSON.stringify({
+            username,
+            current_password,
+            new_password,
+            confirm_password,
+          }),
+        });
+        const data = await response.json();
+        if (data.status === "success") {
+          changePasswordMessage.textContent = "Password changed successfully!";
+          changePasswordMessage.style.color = "green";
+          changePasswordForm.reset();
+        } else {
+          changePasswordMessage.textContent =
+            data.message || "Failed to change password.";
+          changePasswordMessage.style.color = "red";
+        }
+      } catch (error) {
+        console.error("Error changing password:", error);
+        changePasswordMessage.textContent =
+          "An error occurred. Please try again.";
+        changePasswordMessage.style.color = "red";
+      }
+    });
   }
 
   // Handle login form
@@ -51,6 +134,20 @@ document.addEventListener("DOMContentLoaded", () => {
         if (errorMessage) {
           errorMessage.textContent = "An error occurred. Please try again.";
         }
+      }
+    });
+  }
+
+  const togglePassword = document.getElementById("toggle-password");
+  if (togglePassword) {
+    togglePassword.addEventListener("click", () => {
+      const passwordInput = document.getElementById("password");
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        togglePassword.textContent = "Hide";
+      } else {
+        passwordInput.type = "password";
+        togglePassword.textContent = "Show";
       }
     });
   }
@@ -209,6 +306,17 @@ document.addEventListener("DOMContentLoaded", () => {
             </button>`
             : ""
         }
+        ${
+          role === "doctor" &&
+          appt.status !== "completed" &&
+          appt.status !== "cancelled"
+            ? `<button onclick="cancelAppointment('${appt.appointment_id}')"
+          style="margin-top:10px; background:#28a745; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">
+          Mark as Completed
+        </button>`
+            : ""
+        }
+      
       </div>
     `,
         )

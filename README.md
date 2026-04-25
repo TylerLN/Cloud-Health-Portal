@@ -35,7 +35,7 @@ Github -> Settings -> Developer Settings -> Personal Access Token -> Generate ne
 git clone -b appointments https://<replace-with-github-token>@github.com/454-Project-Group/Backend
 ```
 
-Note: requirements.txt and backend & frontend installations/configurations are done automatically in EC2.tf file.
+Note: requirements.txt and backend & frontend installations/configurations are done automatically in EC2.tf file, so tester only needs to set up terraform cloud environment.
 
 #### 2. Create terraform/terraform.tfvars (cloud deployment)
 
@@ -44,6 +44,8 @@ Use Example files and fill with own values
 ```bash
 cp terraform/terraform.tfvars.example terraform/terraform.tfvars
 ```
+
+Note: If user wants to do local development/testing, please read local_testing.txt file provided.
 
 #### 3. Deploy terraform
 

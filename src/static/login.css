@@ -1,19 +1,37 @@
 body {
   font-family: Arial, sans-serif;
   background-color: #dde1e7;
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* center the login/register form */
+.main-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  margin: 0;
+  min-height: 100vh;
 }
 
-/* Login Page */
+/* Login/Register form box */
 .login {
   display: flex;
   flex-direction: column;
   gap: 15px;
   align-items: center;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 350px;
+}
+
+.login form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
 }
 
 input {
@@ -35,28 +53,146 @@ button {
   font-weight: bold;
 }
 
-.disclaimer {
-  max-width: 400px;
-  margin: 20px auto;
+.toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  width: auto;
+  padding: 0;
   font-size: 0.8rem;
-  color: #888;
-  text-align: center;
-  line-height: 1.4;
-  font-style: italic;
 }
 
-/* register html */
-
-.login form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
+/* welcome panel */
+.welcome-panel {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  border-left: 5px solid #004a99;
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  color: #333;
+  line-height: 1.6;
 }
 
-.bottom-disclaimer {
-  max-width: 400px;
-  margin: 20px auto;
+.welcome-panel h3 {
+  color: #004a99;
+  margin-bottom: 10px;
+}
+
+.welcome-panel ul {
+  padding-left: 20px;
+  margin: 5px 0;
+}
+
+.welcome-panel li {
+  margin-bottom: 5px;
+}
+
+/* Cloud Services pannel */
+.cloud-panel {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  border-left: 5px solid #004a99;
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+.cloud-panel h3 {
+  color: #004a99;
+  margin-bottom: 10px;
+}
+
+.cloud-panel ul {
+  padding-left: 20px;
+  margin: 5px 0;
+}
+
+.cloud-panel li {
+  margin-bottom: 5px;
+}
+
+/* whitelist panel */
+.whitelist-panel {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  border-left: 5px solid #004a99;
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+.whitelist-panel h3 {
+  color: #004a99;
+  margin-bottom: 10px;
+}
+
+.whitelist-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.whitelist-table th {
+  background: #f0f7ff;
+  padding: 8px;
+  text-align: left;
+  color: #004a99;
+  border-bottom: 2px solid #004a99;
+}
+
+.whitelist-table td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.role-badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.role-badge.doctor {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.role-badge.patient {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* disclaimer */
+.disclaimer {
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  right: 0;
   text-align: center;
   font-size: 0.8rem;
   color: #888;

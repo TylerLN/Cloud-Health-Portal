@@ -28,32 +28,45 @@
         </nav>
 
         <div class="main-content">
-          <section id="appointments">
+          <div class="dashboard-card">
             <h2>Appointments</h2>
-            <p>View your upcoming appointments with your patients.</p>
+            <p>
+              View and manage appointments scheduled with assigned patients.
+            </p>
             <div class="stat-box">
               <p>
-                Upcoming Appointments:
-                <strong id="appointment-count">No appointments found.</strong>
+                Upcoming: <strong id="appointment-count">Loading...</strong>
               </p>
             </div>
-          </section>
+          </div>
 
-          <section id="files">
+          <div class="dashboard-card">
             <h2>File Inbox</h2>
             <p>View and manage your files and documents.</p>
             <div class="stat-box">
-              <p>
-                Files in Inbox:
-                <strong id="file-count">No files found.</strong>
-              </p>
+              <p>Files: <strong id="file-count">Loading...</strong></p>
             </div>
-          </section>
+          </div>
 
-          <section id="profile">
+          <div class="dashboard-card">
             <h2>Personal Info</h2>
-            <p>View your information and patients.</p>
-          </section>
+            <p>View your profile information and assigned patients.</p>
+            <div class="stat-box">
+              <p><strong>Role:</strong> Doctor</p>
+            </div>
+          </div>
+
+          <div class="dashboard-card">
+            <h2>Permissions</h2>
+            <p>Available Actions based on Role:</p>
+            <div class="stat-box">
+              <ul style="margin: 5px 0; padding-left: 20px; color: #333">
+                <li>View Appointments scheduled with assigned patients.</li>
+                <li>View, Upload, Download Files to assigned patients.</li>
+                <li>View Personal Doctor Profile.</li>
+              </ul>
+            </div>
+          </div>
 
           <div class="bottom-disclaimer">
             <strong>Disclaimer:</strong> This is a demo application for

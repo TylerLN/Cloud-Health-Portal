@@ -178,6 +178,21 @@ class db_conn:
                 """,
                 username,
             )
+    
+    # change password & update in db
+    async def update_password(self, username, new_password):
+        async with self.pool.acquire() as con:
+            result = await con.fetchval(
+                """
+                    UPDATE accounts
+                    SET password = crypt($2, gen_salt('bf'))
+                    WHERE username = $1
+                    RETURNING id;
+                """,
+                username,
+                new_password,
+            )
+        return result
         
     # get all doctors in system in the case there are 1+ doctors
     async def get_all_doctors(self):
@@ -262,6 +277,7 @@ class db_conn:
                         FROM appointments a
                         JOIN accounts d ON d.id = a.doctor_id
                         WHERE a.patient_id = $1
+                        AND a.status NOT IN ('completed', 'cancelled')
                         ORDER BY a.appointment_date, a.appointment_time;
                     """,
                     user_id,
@@ -276,6 +292,7 @@ class db_conn:
                         FROM appointments a
                         JOIN accounts p ON p.id = a.patient_id
                         WHERE a.doctor_id = $1
+                        AND a.status NOT IN ('completed', 'cancelled')
                         ORDER BY a.appointment_date, a.appointment_time;
                     """,
                     user_id,
@@ -301,7 +318,7 @@ class db_conn:
                 appointment_time,
             )
         
-    # cancel appointment option for patients, remove the scheduled appoitnment in table
+    # cancel appointment for patients remove the scheduled appoitnment in table
     async def cancel_appointment(self, appointment_id, patient_id):
         async with self.pool.acquire() as con:
             return await con.fetchval(
@@ -313,6 +330,20 @@ class db_conn:
                 """,
                 appointment_id,
                 patient_id,
+            )
+    
+    # complete appointment for doctors, update status to remove
+    async def complete_appointment(self, appointment_id, doctor_id):
+        async with self.pool.acquire() as con:
+            return await con.fetchval(
+                """
+                    UPDATE appointments
+                    SET status = 'completed'
+                    WHERE id = $1 AND doctor_id = $2
+                    RETURNING id;
+                """,
+                appointment_id,
+                doctor_id,
             )
         
     # DB logic for file transfer feature

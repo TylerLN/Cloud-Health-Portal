@@ -28,25 +28,113 @@
         </nav>
 
         <div class="main-content">
-          <h2>Patient Profile</h2>
-          <div class="profile-info">
-            <p>
-              <strong>Name:</strong>
-              <span id="profile-name"></span>
-            </p>
-            <p>
-              <strong>Role:</strong>
-              <span id="profile-role"></span>
-            </p>
-            <p>
-              <strong>Healthcare Provider:</strong>
-              <span id="profile-provider"></span>
-            </p>
+          <div class="file-section">
+            <div class="profile-info">
+              <h2>Patient Profile</h2>
+              <p>
+                <strong>Name:</strong>
+                <span id="profile-name"></span>
+              </p>
+              <p>
+                <strong>Role:</strong>
+                <span id="profile-role"></span>
+              </p>
+              <p>
+                <strong>Healthcare Provider:</strong>
+                <span id="profile-provider"></span>
+              </p>
+            </div>
+
+            <div class="profile-info">
+              <h2>Change Password</h2>
+              <form id="change-password-form">
+                <label>Username:</label>
+                <input
+                  type="text"
+                  id="cp-username"
+                  placeholder="Enter username"
+                  required
+                />
+
+                <label>Current Password:</label>
+                <div style="position: relative; width: 100%">
+                  <input
+                    type="password"
+                    id="cp-current"
+                    placeholder="Enter current password"
+                    required
+                    style="
+                      width: 100%;
+                      padding-right: 50px;
+                      box-sizing: border-box;
+                    "
+                  />
+                  <button
+                    type="button"
+                    onclick="toggleCp('cp-current', 'toggle-cp-current')"
+                    id="toggle-cp-current"
+                    class="toggle-btn"
+                  >
+                    Show
+                  </button>
+                </div>
+
+                <label>New Password:</label>
+                <div style="position: relative; width: 100%">
+                  <input
+                    type="password"
+                    id="cp-new"
+                    placeholder="Enter new password"
+                    required
+                    style="
+                      width: 100%;
+                      padding-right: 50px;
+                      box-sizing: border-box;
+                    "
+                  />
+                  <button
+                    type="button"
+                    onclick="toggleCp('cp-new', 'toggle-cp-new')"
+                    id="toggle-cp-new"
+                    class="toggle-btn"
+                  >
+                    Show
+                  </button>
+                </div>
+
+                <label>Confirm New Password:</label>
+                <div style="position: relative; width: 100%">
+                  <input
+                    type="password"
+                    id="cp-confirm"
+                    placeholder="Confirm new password"
+                    required
+                    style="
+                      width: 100%;
+                      padding-right: 50px;
+                      box-sizing: border-box;
+                    "
+                  />
+                  <button
+                    type="button"
+                    onclick="toggleCp('cp-confirm', 'toggle-cp-confirm')"
+                    id="toggle-cp-confirm"
+                    class="toggle-btn"
+                  >
+                    Show
+                  </button>
+                </div>
+
+                <button type="submit">Change Password</button>
+              </form>
+              <p id="change-password-message" style="margin-top: 10px"></p>
+            </div>
           </div>
 
           <div class="bottom-disclaimer">
             <strong>Disclaimer:</strong> This is a demo application for
-            educational purposes only.
+            educational purposes only. It does not store or transmit any real
+            user data and should not be used in a real medical setting.
           </div>
         </div>
       </div>

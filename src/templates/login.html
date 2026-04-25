@@ -7,6 +7,44 @@
   </head>
 
   <body>
+    <div class="welcome-panel">
+      <h3>Welcome to the Health Portal</h3>
+      <p>A secure cloud-based medical portal for managing healthcare data.</p>
+      <br />
+      <p><strong>Patients</strong> can:</p>
+      <ul>
+        <li>Manage/Schedule appointments</li>
+        <li>Transfer files securely</li>
+        <li>View their healthcare provider</li>
+      </ul>
+      <br />
+      <p><strong>Doctors</strong> can:</p>
+      <ul>
+        <li>View all patient appointments</li>
+        <li>Transfer files securely to all assigned patients.</li>
+        <li>Manage assigned patients</li>
+      </ul>
+    </div>
+
+    <div class="cloud-panel">
+      <h3>Cloud Services</h3>
+      <p>
+        Through AWS Services & IAC/Terraform, the application provides cloud
+        services for managing healthcare data.
+      </p>
+      <br />
+      <p><strong>AWS Services</strong></p>
+      <ul>
+        <li>EC2 Instances & Target Groups</li>
+        <li>Network Segmentation (VPC & Subnets)</li>
+        <li>Relational Database Service (RDS)</li>
+        <li>Identity and Access Management (IAM)</li>
+        <li>CloudWatch for monitoring</li>
+        <li>S3 bucket for file transfer & Object Storage</li>
+        <li>WAF & ALB for request filtering</li>
+      </ul>
+    </div>
+
     <div class="main-container">
       <div class="login">
         <h1>Medical Health Portal</h1>
@@ -20,12 +58,21 @@
 
         <form id="login-form" class="login-form">
           <input type="text" name="username" placeholder="Username" required />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required
-          />
+
+          <div style="position: relative; width: 100%">
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Password"
+              required
+              style="width: 100%; padding-right: 40px; box-sizing: border-box"
+            />
+            <button type="button" id="toggle-password" class="toggle-btn">
+              Show
+            </button>
+          </div>
+
           <button type="submit">Login</button>
         </form>
 
@@ -33,13 +80,13 @@
 
         <p>Not registered? <a href="register.html">Register here</a></p>
       </div>
-
-      <p class="disclaimer">
-        <strong>Disclaimer:</strong> This is a demo application for educational
-        purposes only. It does not store or transmit any real user data and
-        should not be used in a real medical setting.
-      </p>
     </div>
+
+    <p class="disclaimer">
+      <strong>Disclaimer:</strong> This is a demo application for educational
+      purposes only. It does not store or transmit any real user data and should
+      not be used in a real medical setting.
+    </p>
 
     <script src="../static/app.js"></script>
   </body>

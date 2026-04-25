@@ -28,55 +28,57 @@
         </nav>
 
         <div class="main-content">
-          <section class="upcoming-appointments">
-            <h2>Upcoming Appointments</h2>
-            <p>
-              Here are your upcoming appointments with healthcare providers:
-            </p>
-            <div id="appointments-list"></div>
-          </section>
+          <div class="file-section">
+            <section class="upcoming-appointments">
+              <h2>Upcoming Appointments</h2>
+              <p>
+                Here are your upcoming appointments with healthcare providers:
+              </p>
+              <div id="appointments-list"></div>
+            </section>
 
-          <section class="schedule-appointment">
-            <h2>Schedule an Appointment</h2>
-            <p>
-              Use the form below to schedule a new appointment with your
-              healthcare provider.
-            </p>
+            <section class="schedule-appointment">
+              <h2>Schedule an Appointment</h2>
+              <p>
+                Use the form below to schedule a new appointment with your
+                healthcare provider.
+              </p>
 
-            <form id="appointment-form">
-              <label for="date">Select Date:</label>
-              <input type="date" id="date" name="appointment_date" required />
+              <form id="appointment-form">
+                <label for="date">Select Date:</label>
+                <input type="date" id="date" name="appointment_date" required />
 
-              <label for="time">Select Time:</label>
-              <select id="time" name="appointment_time" required>
-                <option value="">Select Time</option>
-                <option value="09:00:00">9:00 AM</option>
-                <option value="09:30:00">9:30 AM</option>
-                <option value="10:00:00">10:00 AM</option>
-                <option value="10:30:00">10:30 AM</option>
-                <option value="11:00:00">11:00 AM</option>
-                <option value="11:30:00">11:30 AM</option>
-                <option value="12:00:00">12:00 PM</option>
-                <option value="12:30:00">12:30 PM</option>
-                <option value="13:00:00">1:00 PM</option>
-                <option value="13:30:00">1:30 PM</option>
-                <option value="14:00:00">2:00 PM</option>
-                <option value="14:30:00">2:30 PM</option>
-                <option value="15:00:00">3:00 PM</option>
-                <option value="15:30:00">3:30 PM</option>
-                <option value="16:00:00">4:00 PM</option>
-                <option value="16:30:00">4:30 PM</option>
-                <option value="17:00:00">5:00 PM</option>
-              </select>
+                <label for="time">Select Time:</label>
+                <select id="time" name="appointment_time" required>
+                  <option value="">Select Time</option>
+                  <option value="09:00:00">9:00 AM</option>
+                  <option value="09:30:00">9:30 AM</option>
+                  <option value="10:00:00">10:00 AM</option>
+                  <option value="10:30:00">10:30 AM</option>
+                  <option value="11:00:00">11:00 AM</option>
+                  <option value="11:30:00">11:30 AM</option>
+                  <option value="12:00:00">12:00 PM</option>
+                  <option value="12:30:00">12:30 PM</option>
+                  <option value="13:00:00">1:00 PM</option>
+                  <option value="13:30:00">1:30 PM</option>
+                  <option value="14:00:00">2:00 PM</option>
+                  <option value="14:30:00">2:30 PM</option>
+                  <option value="15:00:00">3:00 PM</option>
+                  <option value="15:30:00">3:30 PM</option>
+                  <option value="16:00:00">4:00 PM</option>
+                  <option value="16:30:00">4:30 PM</option>
+                  <option value="17:00:00">5:00 PM</option>
+                </select>
 
-              <label for="reason">Reason for Appointment:</label>
-              <textarea id="reason" name="reason" required></textarea>
+                <label for="reason">Reason for Appointment:</label>
+                <textarea id="reason" name="reason" required></textarea>
 
-              <button type="submit">Schedule Appointment</button>
-            </form>
+                <button type="submit">Schedule Appointment</button>
+              </form>
 
-            <p id="appointment-message" style="color: green"></p>
-          </section>
+              <p id="appointment-message" style="color: green"></p>
+            </section>
+          </div>
 
           <div class="bottom-disclaimer">
             <strong>Disclaimer:</strong> This is a demo application for
