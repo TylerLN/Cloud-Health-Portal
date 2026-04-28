@@ -95,10 +95,7 @@ resource "aws_route_table_association" "public_b_assoc" {
 
 // need nat access for user_data downloads and git clone
 resource "aws_eip" "nat_eip" {
-  domain = "vpc"
-  tags = {
-    Name = "nat-eip"
-  }
+  depends_on = [ aws_internet_gateway.igw ]
 }
 
 resource "aws_nat_gateway" "nat" {
