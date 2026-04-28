@@ -18,8 +18,8 @@ variable "secret_key" {
   sensitive   = true
 }
 
-variable "github_token" {
-  description = "github personal access token"
+// this is for the url to clone repo in user_data (in ec2.tf), based on the user that cloned it
+variable "repo_url" {
+  description = "GitHub repository URL for the application code."
   type        = string
-  sensitive   = true
 }

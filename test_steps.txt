@@ -4,7 +4,9 @@ Ideally, the applicaiton prototype should be deployed within the cloud environme
 Steps to run locally:
 
 make sure you install from requirements.txt
-
+    cd Backend
+    pip install -r requirements.txt
+    
 1. Start postgresql: 
     sudo systemctl start postgresql
 

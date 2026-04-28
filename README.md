@@ -1,5 +1,9 @@
 # Health Portal - Cloud Security Application
 
+## Link to Github Repository
+
+https://github.com/TylerLN/Cloud-Health-Portal
+
 ## Description
 
 The health portal is a cloud-based medical health portal that allows doctors and patients to manage appointments and securely transfer files. The backend is built with Python (Falcon), PostgreSQL, and deployed on AWS through Infrastructure as Code (IAC through Terraform)
@@ -23,19 +27,25 @@ The project applies the following key concepts:
 
 ### Installation Prerequisites
 
-- AWS account with credentials configured
-- Terraform installed on computer
+- AWS account with credentials configured. Steps include:
+  - Install aws configure: sudo apt install awscli
+  - Configure: aws configure
+  - Create access key ID and Secret Access Key
+    - AWS console -> IAM -> Users -> Create user (adminaccess) -> security tab -> create access key (CLI) -> copy access key ID and secret access key
+  - Default region: us-west-2,
+  - Output: json
+  - Verify: Run aws sts get-caller-identity in command line
+
+- Install Terraform
 
 #### 1. Clone Repository
 
-Github personal access token required to clone private repository.
-Github -> Settings -> Developer Settings -> Personal Access Token -> Generate new token (Classic) -> Select "repo" scope -> Copy token
-
 ```bash
-git clone -b appointments https://<replace-with-github-token>@github.com/454-Project-Group/Backend
+git clone https://github.com/TylerLN/Cloud-Health-Portal
+cd Cloud-Health-Portal
 ```
 
-Note: requirements.txt and backend & frontend installations/configurations are done automatically in EC2.tf file, so tester only needs to set up terraform cloud environment.
+Note: requirements.txt and backend & frontend installations/configurations are done automatically in EC2.tf file, so tester only needs to set up terraform cloud environment. The repo_url in terraform.tfvars is the github repository link.
 
 #### 2. Create terraform/terraform.tfvars (cloud deployment)
 
@@ -45,7 +55,7 @@ Use Example files and fill with own values
 cp terraform/terraform.tfvars.example terraform/terraform.tfvars
 ```
 
-Note: If user wants to do local development/testing, please read local_testing.txt file provided.
+Note: If user wants to do local development/testing, please read test_steps.txt file provided.
 
 #### 3. Deploy terraform
 
@@ -57,8 +67,8 @@ terraform apply
 ```
 
 Type 'yes' during deployment process.
-After sucessful creation, wait 5-10 minutes for EC2 instances to finish checks and target groups healthy, then load the
-alb_dns_name from Terraform output.
+After sucessful creation, wait 5-10 minutes for EC2 instances to finish checks and target groups healthy, then copy the
+alb_dns_name link from Terraform output and paste into internet search bar.
 
 #### 4. Application Use:
 

@@ -70,7 +70,7 @@ resource "aws_instance" "app_server" {
 
               apt-get install -y python3 python3-pip git nginx
 
-              git clone -b appointments https://${var.github_token}@github.com/454-Project-Group/Backend /app
+              git clone ${var.repo_url} /app
 
               pip3 install -r /app/requirements.txt
               
